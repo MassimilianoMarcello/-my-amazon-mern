@@ -2,6 +2,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 
 // import db connection
 import connectToDB from './config/db.js';
@@ -10,8 +11,10 @@ import connectToDB from './config/db.js';
 import logger from './middleware/logger.js';
 
 // import routes
-// import userRoutes from './routes/user.js';
-// import bookRoutes from './routes/book.js';
+import userRoutes from './routes/user.js';
+import itemRoutes from './routes/item.js';
+import productRoutes from './routes/product.js';
+
 
 // load environment variables
 dotenv.config();
@@ -49,8 +52,9 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // use routes
-// app.use('/api', userRoutes);
-// app.use('/api', bookRoutes);
+app.use('/api', userRoutes);
+app.use('/api', itemRoutes);
+app.use('/api', productRoutes);
 
 // handle 404
 app.use('*', (req, res) => {

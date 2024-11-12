@@ -2,7 +2,7 @@ import express from 'express';
 import itemControllers from '../controllers/item.js';
 
 
-const { getAllItems, getItem, addItem, updateItem, deleteItem } = itemControllers;
+const { getAllItems, getItem, addItem, updateItem, deleteItem ,getItemsByUser} = itemControllers;
 
 const router = express.Router();
 
@@ -10,6 +10,7 @@ const router = express.Router();
 
 router.get('/items', getAllItems);
 router.get('/items/:id', getItem);
+router.get('/items/user/:id', getItemsByUser);
 router.post('/items', addItem);
 router.put('/items/:id', updateItem);
 router.delete('/items/:id', deleteItem);

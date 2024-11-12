@@ -1,9 +1,9 @@
 import User from '../models/user.js';
-import hashPassword  from '../utils/hashPassword';
-import matchPasswords from '../utils/matchPasswords';
-import validateEmail from '../utils/validateEmail';
-import validatePassword  from '../utils/validatePassword';
-import validateUsername  from '../utils/validateUsername';
+import hashPassword  from '../utils/hashPassword.js';
+import matchPasswords from '../utils/matchPasswords.js';
+import validateEmail from '../utils/validateEmail.js';
+import validatePassword  from '../utils/validatePassword.js';
+import validateUsername  from '../utils/validateUsername.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -58,7 +58,7 @@ const isPasswordCorrect =await bcrypt.compare(password, userExists.password);
 if(!userExists || !isPasswordCorrect){
     return res.status(400).json({message: 'Invalid credentials'});
 }
-const token = jwt.sign({id: userExists._id}, process.env.JWT_SECRET, )
+const token = jwt.sign({id: userExists._id}, process.env.TOKEN_SECRET )
 
 res.cookie('token', token, {httpOnly: true});
 res.json({message: 'Login successful'});

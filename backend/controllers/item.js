@@ -1,6 +1,6 @@
-import { get } from 'mongoose';
-import Item from '../models/item';
-import Product from '../models/product';
+
+import Item from '../models/item.js';
+import Product from '../models/product.js';
 
 const itemControllers = {
     getAllItems: async (req, res) => {
@@ -26,17 +26,19 @@ const itemControllers = {
     getItemsByUser: async (req, res) => {
         const { id } = req.params;
         try {
-            const items = await Product.find({ user_id: id });
+            console.log(`Fetching items for user_id: ${id}`);
+            const items = await Item.find({ user_id: id });
+            console.log(`Items found: ${items.length}`);
             res.json(items);
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
     },
     addItem: async (req, res) => {
-        const { quantity, user_id, price, title, product_id } = req.body;
+        const { quantity, user_id, price, title} = req.body;
 
         try {
-            if (!title || !price || !quantity || !user_id || !product_id) {
+            if (!title || !price || !quantity || !user_id ) {
                 return res
                     .status(400)
                     .json({ message: 'All fields are required' });
@@ -56,7 +58,7 @@ const itemControllers = {
                 user_id,
                 price,
                 title,
-                product_id
+             
             });
             res.status(201).json(item);
         } catch (error) {
@@ -95,3 +97,5 @@ const itemControllers = {
         }
     }
 };
+
+export default itemControllers;
