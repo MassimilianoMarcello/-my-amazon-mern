@@ -2,7 +2,13 @@ import express from 'express';
 
 import productControllers from '../controllers/product.js';
 
-const { getAllproducts, getProduct, createProduct, updateProduct, deleteProduct } = productControllers;
+const {
+    getAllproducts,
+    getProduct,
+    createProduct,
+    updateProduct,
+    deleteProduct
+} = productControllers;
 
 const router = express.Router();
 
