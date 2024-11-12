@@ -10,8 +10,8 @@ import connectToDB from './config/db.js';
 import logger from './middleware/logger.js';
 
 // import routes
-import userRoutes from './routes/user.js';
-import bookRoutes from './routes/book.js';
+// import userRoutes from './routes/user.js';
+// import bookRoutes from './routes/book.js';
 
 // load environment variables
 dotenv.config();
@@ -49,8 +49,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // use routes
-app.use('/api', userRoutes);
-app.use('/api', bookRoutes);
+// app.use('/api', userRoutes);
+// app.use('/api', bookRoutes);
 
 // handle 404
 app.use('*', (req, res) => {
