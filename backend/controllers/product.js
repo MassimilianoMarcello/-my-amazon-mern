@@ -22,14 +22,15 @@ const productControllers = {
         }
     },
     createProduct: async (req, res) => {
-        const { title, description, price, category, image } = req.body;
+        const { title, description, price, category, images,mainImage } = req.body;
         try {
             const product = await Product.create({
                 title,
                 description,
                 price,
                 category,
-                image
+                images,
+                mainImage
             });
             res.status(201).json(product);
         } catch (error) {
@@ -37,17 +38,26 @@ const productControllers = {
         }
     },
     updateProduct: async (req, res) => {
-        const { title, description, price, category, image } = req.body;
         const { id } = req.params;
+        const { title, description, price, category, mainImage, images } = req.body;
         try {
-            const product = await Product.findByIdAndUpdate({ _id: id }, { title, description, price, category, image }, { new: true });
+            const product = await Product.findById(id);
             if (!product) {
                 return res.status(404).json({ message: 'Product not found' });
             }
+
+            product.title = title || product.title;
+            product.description = description || product.description;
+            product.price = price || product.price;
+            product.category = category || product.category;
+            product.mainImage = mainImage || product.mainImage;
+            product.images = images || product.images;
+
+            await product.save();
             res.json(product);
-        } catch (error) {    
-            return res.status(500).json({ message: error.message });
-        }       
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
     },
     deleteProduct: async (req, res) => {
         const { id } = req.params;

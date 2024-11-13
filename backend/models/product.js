@@ -17,12 +17,17 @@ const productSchema = new mongoose.Schema({
 
     category: {
         type: String,
-        required: true
+        required: true,
+        enum: ['Generic','Smartphones', 'Laptops', 'Tablets', 'Accessories', 'Wearables'],
+        default: 'Generic'
     },
 
-    image: {
+    mainImage: {
         type: String,
         required: true
+    },
+    images: {
+        type: [String], // Array of strings for multiple images
     }
 
   
