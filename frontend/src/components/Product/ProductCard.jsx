@@ -1,12 +1,12 @@
 
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-
+import './ProductCard.css';
 
 const ProductCard = ({ product }) => {
     return (
         <div className="product-card">
-            <img src={product.image} alt={product.title} className="product-image" />
+            <img src={product.mainImage} alt={product.title} className="product-image" />
             <div className="product-info">
                 <h2 className="product-title">{product.title}</h2>
                 <p className="product-price">${product.price.toFixed(2)}</p>
@@ -23,7 +23,7 @@ ProductCard.propTypes = {
         _id: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
         price: PropTypes.number.isRequired,
-        image: PropTypes.string.isRequired,
+        mainImage: PropTypes.string.isRequired,
     }).isRequired,
 };
 

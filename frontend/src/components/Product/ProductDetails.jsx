@@ -1,13 +1,14 @@
 import  { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
-
+import { useParams, useNavigate } from 'react-router-dom';
+import './ProductDetails.css';
 
 const ProductDetails = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [mainImage, setMainImage] = useState('');
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -18,6 +19,7 @@ const ProductDetails = () => {
                 }
                 const data = await response.json();
                 setProduct(data);
+                setMainImage(data.mainImage); // set main Image
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -38,27 +40,36 @@ const ProductDetails = () => {
 
     return (
         <div className="product-details">
-            <img src={product.image} alt={product.title} className="product-image" />
+            <img src={mainImage} alt={product.title} className="product-main-image" />
+            <div className="product-thumbnails">
+                {product.images.map((image, index) => (
+                    <img
+                        key={index}
+                        src={image}
+                        alt={`${product.title} thumbnail ${index + 1}`}
+                        className="product-thumbnail"
+                        onClick={() => setMainImage(image)}
+                    />
+                ))}
+            </div>
             <div className="product-info">
                 <h2 className="product-title">{product.title}</h2>
                 <p className="product-description">{product.description}</p>
                 <p className="product-category">Category: {product.category}</p>
                 <p className="product-price">${product.price.toFixed(2)}</p>
                 <button className="add-to-cart-button">Add to Cart</button>
+                <button className="edit-product-button" onClick={() => navigate(`/update-product/${id}`)}>Edit</button>
+                <button className="delete-product-button" onClick={() => navigate(`/delete-product/${id}`)}>Delete</button>
+
             </div>
         </div>
     );
 };
 
-ProductDetails.propTypes = {
-    product: PropTypes.shape({
-        _id: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-        description: PropTypes.string.isRequired,
-        price: PropTypes.number.isRequired,
-        category: PropTypes.string.isRequired,
-        image: PropTypes.string.isRequired,
-    }),
-};
-
 export default ProductDetails;
+
+
+
+
+
+// http://localhost:5004        
