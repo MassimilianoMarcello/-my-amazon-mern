@@ -30,6 +30,15 @@ const CreateProduct = () => {
         }
     };
 
+    const handleAddImage = () => {
+        setImages([...images, '']);
+    };
+
+    const handleRemoveImage = (index) => {
+        const newImages = images.filter((_, i) => i !== index);
+        setImages(newImages);
+    };
+
     return (
         <form onSubmit={handleSubmit}>
             <div>
@@ -61,19 +70,23 @@ const CreateProduct = () => {
             <div>
                 <label>Additional Images URLs:</label>
                 {images.map((image, index) => (
-                    <input
-                        key={index}
-                        type="text"
-                        value={image}
-                        onChange={(e) => {
-                            const newImages = [...images];
-                            newImages[index] = e.target.value;
-                            setImages(newImages);
-                        }}
-                        required
-                    />
+                    <div key={index} className="image-input">
+                        <input
+                            type="text"
+                            value={image}
+                            onChange={(e) => {
+                                const newImages = [...images];
+                                newImages[index] = e.target.value;
+                                setImages(newImages);
+                            }}
+                            required
+                        />
+                        <button type="button" onClick={() => handleRemoveImage(index)}>
+                            Remove
+                        </button>
+                    </div>
                 ))}
-                <button type="button" onClick={() => setImages([...images, ''])}>
+                <button type="button" onClick={handleAddImage}>
                     Add Image
                 </button>
             </div>

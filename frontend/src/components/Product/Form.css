@@ -36,8 +36,33 @@ form button {
     padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
+    margin-top: 10px;
 }
 
 form button:hover {
     background-color: #218838;
+}
+
+.image-input {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.image-input input {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.image-input button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.image-input button:hover {
+    background-color: #c82333;
 }
