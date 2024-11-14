@@ -2,6 +2,8 @@ import { NavLink } from 'react-router-dom';
 import './Navbar.css';
 
 const Navbar = () => {
+
+
     return (
         <>
         <div className="navbar">
@@ -32,6 +34,7 @@ const Navbar = () => {
                         Products
                     </NavLink>
                 </li>
+              
                 <li>
                     <NavLink to="/add-product">
                         Add Product
