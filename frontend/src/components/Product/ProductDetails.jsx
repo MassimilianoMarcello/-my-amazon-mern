@@ -42,6 +42,12 @@ const ProductDetails = () => {
         <div className="product-details">
             <img src={mainImage} alt={product.title} className="product-main-image" />
             <div className="product-thumbnails">
+                <img
+                    src={product.mainImage}
+                    alt={`${product.title} main`}
+                    className="product-thumbnail"
+                    onClick={() => setMainImage(product.mainImage)}
+                />
                 {product.images.map((image, index) => (
                     <img
                         key={index}
@@ -59,6 +65,7 @@ const ProductDetails = () => {
                 <p className="product-price">${product.price.toFixed(2)}</p>
                 <button className="add-to-cart-button">Add to Cart</button>
                 <button className="edit-product-button" onClick={() => navigate(`/update-product/${id}`)}>Edit</button>
+    
                 <button className="delete-product-button" onClick={() => navigate(`/delete-product/${id}`)}>Delete</button>
 
             </div>
@@ -69,7 +76,7 @@ const ProductDetails = () => {
 export default ProductDetails;
 
 
-
+{/* <button className="delete-product-button" onClick={() => navigate(`/delete-product/${id}`)}>Delete</button> */}
 
 
 // http://localhost:5004     
