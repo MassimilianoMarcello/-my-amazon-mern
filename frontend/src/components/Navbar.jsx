@@ -40,6 +40,11 @@ const Navbar = () => {
                         Add Product
                     </NavLink>
                 </li>
+                <li>
+                    <NavLink to="/all-users">
+                       Users
+                    </NavLink>
+                </li>
             </ul>
             
         </div>

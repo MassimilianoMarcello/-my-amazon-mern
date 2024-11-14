@@ -10,10 +10,31 @@ import jwt from 'jsonwebtoken';
 const userControllers = {
     getAllUsers: async (req, res) => {
         try {
-            const users = await User.find();
-res.json(users);
+            const users = await User.find({}, 'email role _id'); // Seleziona solo email, role e _id
+            res.json(users);
         } catch (error) {
-            return res.status(500).json({ message: error.message });
+            res.status(500).json({ message: error.message });
+        }
+    },
+    updateUserRole: async (req, res) => {
+        const { id } = req.params;
+        const { role } = req.body;
+
+        if (!['user', 'admin'].includes(role)) {
+            return res.status(400).json({ message: 'Invalid role' });
+        }
+
+        try {
+            const user = await User.findById(id);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            user.role = role;
+            await user.save();
+            res.json(user);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
         }
     },
 
@@ -39,6 +60,10 @@ res.json(users);
                     .status(400)
                     .json({ message: 'Passwords do not match' });
             }
+            const existingUser = await User.findOne({ email });
+            if (existingUser) {
+                return res.status(400).json({ message: 'Email already in use' });
+            }
             const hashedPassword = hashPassword(password);
             const user = await User.create({
                 username,
@@ -59,6 +84,8 @@ res.json(users);
                     .json({ message: 'All fields are required' });
 
             const userExists = await User.findOne({ email });
+                
+  
             const isPasswordCorrect = await bcrypt.compare(
                 password,
                 userExists.password
@@ -72,7 +99,7 @@ res.json(users);
             );
 
             res.cookie('token', token, { httpOnly: true });
-            res.json({ message: 'Login successful' });
+            res.json({ message: 'Login successful', userId: userExists._id });
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
