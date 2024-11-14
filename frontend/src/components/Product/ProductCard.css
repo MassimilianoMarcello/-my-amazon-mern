@@ -1,20 +1,13 @@
-/* Reset di base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+/* ProductCard.css */
 .product-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #fff;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #ddd;
     border-radius: 8px;
+    width: 25%;
     padding: 16px;
-    max-width: 300px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 16px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: white;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
@@ -26,6 +19,7 @@
 .product-image {
     width: 100%;
     height: auto;
+    align-items: center;
     border-radius: 8px;
     object-fit: cover;
     margin-bottom: 12px;
@@ -40,6 +34,9 @@
     font-weight: 600;
     color: #333;
     margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .product-price {
@@ -50,14 +47,11 @@
 
 .details-link {
     display: inline-block;
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: #fff;
+    color: #007bff;
     text-decoration: none;
-    border-radius: 4px;
-    transition: background-color 0.2s ease-in-out;
 }
 
 .details-link:hover {
-    background-color: #0056b3;
+    text-decoration: underline;
 }
+
