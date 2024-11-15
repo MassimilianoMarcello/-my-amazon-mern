@@ -7,7 +7,8 @@ const {
     getProduct,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getProductsByCategory,
 } = productControllers;
 
 const router = express.Router();
@@ -15,6 +16,7 @@ const router = express.Router();
 // routes
 router.get('/products', getAllproducts);
 router.get('/products/:id', getProduct);
+router.get('/products/category/:category', getProductsByCategory);
 router.post('/products', createProduct);
 
 router.put('/products/:id', updateProduct);

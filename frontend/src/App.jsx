@@ -14,6 +14,8 @@ import ProductDetails from './components/Product/ProductDetails';
 import AddProduct from './components/Product/AddProduct';
 import UpdateProduct from './components/Product/UpdateProduct';
 import DeleteProduct from './components/Product/Deleteproduct';
+import CategoryProducts from './components/Product/CategoryProducts';
+import Home from './Home';
 
 const App = () => {
     return (
@@ -25,7 +27,7 @@ const App = () => {
                 <Navbar />
                 <Routes>
                     {/* users */}
-                    <Route path="/" element={<h1>Home</h1>} />
+                    <Route path="/" element={<Home/>} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/logout" element={<Logout />} />
@@ -33,8 +35,10 @@ const App = () => {
                     <Route path="/all-users" element={<UsersListPage />} />
                     {/* products */}
                     <Route path="/products" element={<ProductsList />} />
+                    <Route path="/category/:category" element={<CategoryProducts />} />
                     <Route path="/products/:id" element={<ProductDetails />} />
                     <Route path="/add-product" element={<AddProduct />} />
+
                     <Route
                         path="/update-product/:id"
                         element={<UpdateProduct />}

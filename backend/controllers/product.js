@@ -21,6 +21,15 @@ const productControllers = {
             return res.status(500).json({ message: error.message });
         }
     },
+    getProductsByCategory: async (req, res) => {
+        const { category } = req.params;
+        try {
+            const products = await Product.find({ category });
+            res.json(products);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    },
     createProduct: async (req, res) => {
         const { title, description, price, category, images,mainImage } = req.body;
         try {
