@@ -8,6 +8,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 const userControllers = {
+    // Get all users
     getAllUsers: async (req, res) => {
         try {
             const users = await User.find({}, 'email role _id'); // Seleziona solo email, role e _id
@@ -16,6 +17,7 @@ const userControllers = {
             res.status(500).json({ message: error.message });
         }
     },
+    // Update user role (admin or user)
     updateUserRole: async (req, res) => {
         const { id } = req.params;
         const { role } = req.body;
@@ -37,6 +39,7 @@ const userControllers = {
             res.status(500).json({ message: error.message });
         }
     },
+    // Get user profile  (username, email, role)  
     getUserProfile: async (req, res) => {
         const { id } = req.params;
         try {
@@ -49,7 +52,27 @@ const userControllers = {
             res.status(500).json({ message: error.message });
         }
     },
+    // Update user profile (firstName, lastName, address)
+    updateUserProfile: async (req, res) => {
+        const { id } = req.params;
+        const { firstName, lastName, address } = req.body;
+        try {
+            const user = await User.findById(id);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
 
+            user.firstName = firstName || user.firstName;
+            user.lastName = lastName || user.lastName;
+            user.address = address || user.address;
+
+            await user.save();
+            res.json(user);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    },
+// Register a new user
     register: async (req, res) => {
         const { username, email, password, rePassword } = req.body;
         try {
@@ -87,6 +110,7 @@ const userControllers = {
             return res.status(500).json({ message: error.message });
         }
     },
+    // Login a user
     login: async (req, res) => {
         const { email, password } = req.body;
         try {
@@ -116,6 +140,7 @@ const userControllers = {
             return res.status(500).json({ message: error.message });
         }
     },
+        
     logout: async (req, res) => {
         res.clearCookie('token');
         res.json({ message: 'Logout successful' });
