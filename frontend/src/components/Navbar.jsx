@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom';
 import './Navbar.css';
 
 const Navbar = () => {
+    const userId = sessionStorage.getItem('userId'); // Ottieni l'ID dell'utente dal session storage
 
 
     return (
@@ -23,7 +24,14 @@ const Navbar = () => {
                         Register
                     </NavLink>
                  </li>
-
+                 {userId && (
+                    <li>
+                        <NavLink to={`/profile/${userId}`}>
+                            Profile
+                        </NavLink>
+                    </li>
+                )}
+             
             <li>
                 <NavLink to="/logout">
                     Logout

@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 
 // user imports
 import UsersListPage from './components/User/UsersListPage';
+import UserProfile from './components/User/UserProfile';
 import Register from './components/User/Register';
 import Login from './components/User/Login';
 import Logout from './components/User/Logout';
@@ -16,6 +17,7 @@ import UpdateProduct from './components/Product/UpdateProduct';
 import DeleteProduct from './components/Product/Deleteproduct';
 import CategoryProducts from './components/Product/CategoryProducts';
 import Home from './Home';
+
 
 const App = () => {
     return (
@@ -31,6 +33,7 @@ const App = () => {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/logout" element={<Logout />} />
+                    <Route path="/profile/:id" element={<UserProfile />} />
                     {/* users managed by admin */}
                     <Route path="/all-users" element={<UsersListPage />} />
                     {/* products */}

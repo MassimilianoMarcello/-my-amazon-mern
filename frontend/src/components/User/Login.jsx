@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import validateEmail from '../../utils/validateEmail';
+import validatePassword from '../../utils/validatePassword';
 import './Forms.css';
 
 const Login = () => {
@@ -11,31 +13,42 @@ const Login = () => {
 
     const submitForm = async (e) => {
         e.preventDefault();
-        if (email && password) {
-            try {
-                const res = await axios.post(
-                    'http://localhost:5004/api/login',
-                    {
-                        email,
-                        password
-                    },
-                    { withCredentials: true }
-                );
-
-                if (res.status === 200 && res.data.message === 'Login successful') {
-                    sessionStorage.setItem('userId', res.data.userId);
-                    setEmail('');
-                    setPassword('');
-                    setError('');
-                    navigate('/');
-                } else {
-                    setError('Invalid credentials');
-                }
-            } catch (err) {
-                setError(err.response?.data?.message || 'An error occurred');
-            }
-        } else {
+        if (!email || !password) {
             setError('All fields are required.');
+            return;
+        }
+
+        if (!validateEmail(email)) {
+            setError('Invalid email format.');
+            return;
+        }
+
+        if (!validatePassword(password)) {
+            setError('Invalid password format.');
+            return;
+        }
+
+        try {
+            const res = await axios.post(
+                'http://localhost:5004/api/login',
+                {
+                    email,
+                    password
+                },
+                { withCredentials: true }
+            );
+
+            if (res.status === 200 && res.data.message === 'Login successful') {
+                sessionStorage.setItem('userId', res.data.userId);
+                setEmail('');
+                setPassword('');
+                setError('');
+                navigate('/');
+            } else {
+                setError('Invalid credentials');
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || 'An error occurred');
         }
     };
 

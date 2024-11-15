@@ -2,7 +2,7 @@ import express from 'express';
 
 import userControllers from '../controllers/user.js';
 
-const { register, login, logout, getAllUsers, updateUserRole } = userControllers;
+const { register, login, logout, getAllUsers, updateUserRole,getUserProfile } = userControllers;
 
 const router = express.Router();
 
@@ -15,6 +15,7 @@ router.post('/logout', logout);
 // managing users
 router.get("/users", getAllUsers);
 router.put("/users/:id/role", updateUserRole);
+router.get("/users/:id", getUserProfile);
 
 
 
