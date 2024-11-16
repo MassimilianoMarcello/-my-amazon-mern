@@ -16,6 +16,7 @@ router.post('/logout', logout);
 // managing users
 router.get("/users", getAllUsers);
 router.put("/users/:id/role", updateUserRole);
+
 // SINGLE USER PROFILE
 router.get("/users/:id", getUserProfile);
 router.put("/users/:id", updateUserProfile);

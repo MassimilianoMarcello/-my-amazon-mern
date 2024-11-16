@@ -43,7 +43,7 @@ const userControllers = {
     getUserProfile: async (req, res) => {
         const { id } = req.params;
         try {
-            const user = await User.findById(id, 'username email role');
+            const user = await User.findById(id, 'username email role firstName lastName address');
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
@@ -52,26 +52,29 @@ const userControllers = {
             res.status(500).json({ message: error.message });
         }
     },
+
     // Update user profile (firstName, lastName, address)
-    updateUserProfile: async (req, res) => {
+     updateUserProfile :async (req, res) => {
         const { id } = req.params;
         const { firstName, lastName, address } = req.body;
+    
         try {
             const user = await User.findById(id);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
-
+    
             user.firstName = firstName || user.firstName;
             user.lastName = lastName || user.lastName;
             user.address = address || user.address;
-
+    
             await user.save();
             res.json(user);
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
     },
+    
 // Register a new user
     register: async (req, res) => {
         const { username, email, password, rePassword } = req.body;

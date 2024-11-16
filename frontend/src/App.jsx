@@ -8,6 +8,7 @@ import UserProfile from './components/User/UserProfile';
 import Register from './components/User/Register';
 import Login from './components/User/Login';
 import Logout from './components/User/Logout';
+import UpdateUserProfile from './components/User/UpdateUserProfile';
 
 // products import
 import ProductsList from './components/Product/ProductsList';
@@ -16,6 +17,7 @@ import AddProduct from './components/Product/AddProduct';
 import UpdateProduct from './components/Product/UpdateProduct';
 import DeleteProduct from './components/Product/Deleteproduct';
 import CategoryProducts from './components/Product/CategoryProducts';
+import DiscountedProducts from './components/HomePage/DiscountedProducts';
 import Home from './Home';
 
 
@@ -34,6 +36,7 @@ const App = () => {
                     <Route path="/register" element={<Register />} />
                     <Route path="/logout" element={<Logout />} />
                     <Route path="/profile/:id" element={<UserProfile />} />
+                    <Route path="/update-user/:id" element={<UpdateUserProfile />} />
                     {/* users managed by admin */}
                     <Route path="/all-users" element={<UsersListPage />} />
                     {/* products */}
@@ -41,7 +44,7 @@ const App = () => {
                     <Route path="/category/:category" element={<CategoryProducts />} />
                     <Route path="/products/:id" element={<ProductDetails />} />
                     <Route path="/add-product" element={<AddProduct />} />
-
+                    <Route path="/discounted-products" element={<DiscountedProducts />} />
                     <Route
                         path="/update-product/:id"
                         element={<UpdateProduct />}
