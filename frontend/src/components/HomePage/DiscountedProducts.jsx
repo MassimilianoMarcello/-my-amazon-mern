@@ -12,7 +12,7 @@ const DiscountedProducts = () => {
     useEffect(() => {
         const fetchDiscountedProducts = async () => {
             try {
-                const response = await axios.get('http://localhost:5004/api/products/discounted');
+                const response = await axios.get('http://localhost:5004/api/products/products/discounted');
                 setProducts(response.data);
             } catch (error) {
                 setError(error.message);

@@ -34,10 +34,11 @@ const productControllers = {
         }
     },
     // get discounted products
+
     getDiscountedProducts: async (req, res) => {
         try {
             console.log('Querying for discounted products...');
-            const discountedProducts = await Product.find({ discount: { $gt: 0 } });
+            const discountedProducts = await Product.find({ isDiscounted: true });
             console.log('Discounted products found:', discountedProducts);
             
             if (discountedProducts.length === 0) {
@@ -48,7 +49,8 @@ const productControllers = {
         } catch (error) {
             console.error('Error fetching discounted products:', error);
             res.status(500).json({ message: error.message });
-        }},
+        }
+    },
 // create a new product     
     createProduct: async (req, res) => {
         const { title, description, price, category, images,mainImage , discount} = req.body;

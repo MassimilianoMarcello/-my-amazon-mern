@@ -24,7 +24,7 @@ router.get('/products/category/:category', getProductsByCategory);
 
 
 // discounted products
-router.get('/products/discounted', getDiscountedProducts);
+router.get('/products/products/discounted', getDiscountedProducts);
 
 // create, update, delete products
 router.post('/products', createProduct);

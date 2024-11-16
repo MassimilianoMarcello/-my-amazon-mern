@@ -1,17 +1,21 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Form.css'; // Importa il file CSS
+import './Form.css';
 
 const UpdateProduct = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
-    const [category, setCategory] = useState('Smartphones');
+    const [category, setCategory] = useState('Generic');
     const [mainImage, setMainImage] = useState('');
     const [images, setImages] = useState(['']);
     const [discount, setDiscount] = useState(0);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
     useEffect(() => {
         const fetchProduct = async () => {
             try {
@@ -25,7 +29,7 @@ const UpdateProduct = () => {
                 setImages(product.images);
                 setDiscount(product.discount);
             } catch (error) {
-                console.error('Error fetching product:', error);
+                setError(error.response.data.message);
             }
         };
 
@@ -34,80 +38,119 @@ const UpdateProduct = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const product = { title, description, price, category, mainImage, images, discount };
-
         try {
-            const response = await axios.put(`http://localhost:5004/api/products/${id}`, product, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+            await axios.put(`http://localhost:5004/api/products/${id}`, {
+                title,
+                description,
+                price,
+                category,
+                mainImage,
+                images,
+                discount
             });
-
-            console.log('Product updated:', response.data);
+            setSuccess('Product updated successfully');
+            setError('');
+            navigate(`/products/${id}`);
         } catch (error) {
-            console.error('Error updating product:', error);
+            setError(error.response.data.message);
+            setSuccess('');
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>Title:</label>
-                <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
-            </div>
-            <div>
-                <label>Description:</label>
-                <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
-            </div>
-            <div>
-                <label>Price:</label>
-                <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
-            </div>
-            <div>
-                <label>Category:</label>
-                <select value={category} onChange={(e) => setCategory(e.target.value)} required>
-                    <option value="Smartphones">Smartphones</option>
-                    <option value="Laptops">Laptops</option>
-                    <option value="Tablets">Tablets</option>
-                    <option value="Accessories">Accessories</option>
-                    <option value="Wearables">Wearables</option>
-                </select>
-            </div>
-            <div>
-                <label>Main Image URL:</label>
-                <input type="text" value={mainImage} onChange={(e) => setMainImage(e.target.value)} required />
-            </div>
-            <div>
-                <label>Additional Images URLs:</label>
-                {images.map((image, index) => (
+        <div className="update-product">
+            <h1>Update Product</h1>
+            {error && <p className="error">{error}</p>}
+            {success && <p className="success">{success}</p>}
+            <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label htmlFor="title">Title</label>
                     <input
-                        key={index}
                         type="text"
-                        value={image}
-                        onChange={(e) => {
-                            const newImages = [...images];
-                            newImages[index] = e.target.value;
-                            setImages(newImages);
-                        }}
+                        id="title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
                         required
                     />
-                ))}
-                <button type="button" onClick={() => setImages([...images, ''])}>
-                    Add Image
-                </button>
-                
-            </div>
-            <div className="form-group">
+                </div>
+                <div className="form-group">
+                    <label htmlFor="description">Description</label>
+                    <textarea
+                        id="description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="price">Price</label>
+                    <input
+                        type="number"
+                        id="price"
+                        value={price}
+                        onChange={(e) => setPrice(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="category">Category</label>
+                    <select
+                        id="category"
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                        required
+                    >
+                        <option value="Generic">Generic</option>
+                        <option value="Smartphones">Smartphones</option>
+                        <option value="Laptops">Laptops</option>
+                        <option value="Tablets">Tablets</option>
+                        <option value="Accessories">Accessories</option>
+                        <option value="Wearables">Wearables</option>
+                    </select>
+                </div>
+                <div className="form-group">
+                    <label htmlFor="mainImage">Main Image URL</label>
+                    <input
+                        type="text"
+                        id="mainImage"
+                        value={mainImage}
+                        onChange={(e) => setMainImage(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="images">Additional Images (comma separated URLs)</label>
+                    {images.map((image, index) => (
+                        <input
+                            key={index}
+                            type="text"
+                            value={image}
+                            onChange={(e) => {
+                                const newImages = [...images];
+                                newImages[index] = e.target.value;
+                                setImages(newImages);
+                            }}
+                            required
+                        />
+                    ))}
+                    <button type="button" onClick={() => setImages([...images, ''])}>
+                        Add Image
+                    </button>
+                </div>
+                <div className="form-group">
                     <label htmlFor="discount">Discount (%)</label>
                     <input
                         type="number"
                         id="discount"
                         value={discount}
                         onChange={(e) => setDiscount(e.target.value)}
+                        min="0"
+                        max="100"
                     />
                 </div>
-            <button type="submit">Update Product</button>
-        </form>
+                <button type="submit">Update Product</button>
+            </form>
+        </div>
     );
 };
 

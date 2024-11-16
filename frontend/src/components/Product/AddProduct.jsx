@@ -93,15 +93,10 @@ const CreateProduct = () => {
                     Add Image
                 </button>
             </div>
-            <div className="form-group">
-                    <label htmlFor="discount">Discount (%)</label>
-                    <input
-                        type="number"
-                        id="discount"
-                        value={discount}
-                        onChange={(e) => setDiscount(e.target.value)}
-                    />
-                </div>
+            <div>
+                <label>Discount (%):</label>
+                <input type="number" value={discount} onChange={(e) => setDiscount(e.target.value)} min="0" max="100" />
+            </div>
             <button type="submit">Create Product</button>
         </form>
     );
