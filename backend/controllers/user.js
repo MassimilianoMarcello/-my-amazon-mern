@@ -40,40 +40,41 @@ const userControllers = {
         }
     },
     // Get user profile  (username, email, role)  
-    getUserProfile: async (req, res) => {
-        const { id } = req.params;
-        try {
-            const user = await User.findById(id, 'username email role firstName lastName address');
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-            res.json(user);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-    },
 
-    // Update user profile (firstName, lastName, address)
-     updateUserProfile :async (req, res) => {
-        const { id } = req.params;
-        const { firstName, lastName, address } = req.body;
-    
-        try {
-            const user = await User.findById(id);
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
+        getUserProfile: async (req, res) => {
+            const { id } = req.params;
+            try {
+                const user = await User.findById(id, 'username email role firstName lastName address');
+                if (!user) {
+                    return res.status(404).json({ message: 'User not found' });
+                }
+                res.json(user);
+            } catch (error) {
+                res.status(500).json({ message: error.message });
             }
+        },
     
-            user.firstName = firstName || user.firstName;
-            user.lastName = lastName || user.lastName;
-            user.address = address || user.address;
+        updateUserProfile: async (req, res) => {
+            const { id } = req.params;
+            const { firstName, lastName, address } = req.body;
+            try {
+                const user = await User.findById(id);
+                if (!user) {
+                    return res.status(404).json({ message: 'User not found' });
+                }
     
-            await user.save();
-            res.json(user);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-    },
+                user.firstName = firstName || user.firstName;
+                user.lastName = lastName || user.lastName;
+                user.address = address || user.address;
+    
+                await user.save();
+                res.json(user);
+            } catch (error) {
+                res.status(500).json({ message: error.message });
+            }
+        },
+    
+
     
 // Register a new user
     register: async (req, res) => {

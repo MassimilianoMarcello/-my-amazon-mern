@@ -1,83 +1,87 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import './Forms.css';
 
 const UpdateUserProfile = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [user, setUser] = useState({
-        firstName: '',
-        lastName: '',
-        address: ''
-    });
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [address, setAddress] = useState('');
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
     useEffect(() => {
-        const fetchUser = async () => {
+        const fetchUserProfile = async () => {
             try {
                 const response = await axios.get(`http://localhost:5004/api/users/${id}`);
-                setUser(response.data);
+                const user = response.data;
+                setFirstName(user.firstName);
+                setLastName(user.lastName);
+                setAddress(user.address);
             } catch (error) {
-                console.error('Errore nel recupero del profilo utente:', error);
+                setError(error.response.data.message);
             }
         };
 
-        fetchUser();
+        fetchUserProfile();
     }, [id]);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setUser((prevUser) => ({
-            ...prevUser,
-            [name]: value,
-        }));
-    };
-
-
-    const handleUpdate = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:5004/api/users/${id}`, user);
-            alert('Profilo aggiornato con successo!');
-          
+            await axios.put(`http://localhost:5004/api/users/${id}`, {
+                firstName,
+                lastName,
+                address
+            });
+            setSuccess('Profile updated successfully');
+            setError('');
             navigate(`/profile/${id}`);
         } catch (error) {
-            console.error('Errore durante l\'aggiornamento del profilo utente:', error);
+            setError(error.response.data.message);
+            setSuccess('');
         }
     };
-    
 
     return (
         <div className="update-user-profile">
-            <h1>Update User Profile</h1>
-            <form onSubmit={handleUpdate}>
-                <div>
-                    <label>First Name:</label>
+            <h1>Update Profile</h1>
+            {error && <p className="error">{error}</p>}
+            {success && <p className="success">{success}</p>}
+            <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label htmlFor="firstName">First Name</label>
                     <input
                         type="text"
-                        name="firstName"
-                        value={user.firstName || ""}
-                        onChange={handleChange}
+                        id="firstName"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        required
                     />
                 </div>
-                <div>
-                    <label>Last Name:</label>
+                <div className="form-group">
+                    <label htmlFor="lastName">Last Name</label>
                     <input
                         type="text"
-                        name="lastName"
-                        value={user.lastName || ""}
-                        onChange={handleChange}
+                        id="lastName"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        required
                     />
                 </div>
-                <div>
-                    <label>Address:</label>
+                <div className="form-group">
+                    <label htmlFor="address">Address</label>
                     <input
                         type="text"
-                        name="address"
-                        value={user.address || ""}
-                        onChange={handleChange}
+                        id="address"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        required
                     />
                 </div>
-                <button type="submit">Update</button>
+                <button type="submit">Update Profile</button>
             </form>
         </div>
     );
