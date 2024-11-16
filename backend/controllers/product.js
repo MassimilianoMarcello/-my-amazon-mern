@@ -1,6 +1,7 @@
 import Product from '../models/product.js';
 
 const productControllers = {
+    // get all products  
     getAllproducts: async (req, res) => {
         try {
             const products = await Product.find();
@@ -9,6 +10,7 @@ const productControllers = {
             return res.status(500).json({ message: error.message });
         }
     },
+    // get product by ID    
     getProduct: async (req, res) => {
         const {id}=req.params;
         try {
@@ -21,6 +23,7 @@ const productControllers = {
             return res.status(500).json({ message: error.message });
         }
     },
+    // get products by category
     getProductsByCategory: async (req, res) => {
         const { category } = req.params;
         try {
@@ -30,6 +33,7 @@ const productControllers = {
             res.status(500).json({ message: error.message });
         }
     },
+    // get discounted products
     getDiscountedProducts: async (req, res) => {
         try {
             console.log('Querying for discounted products...');
@@ -45,6 +49,7 @@ const productControllers = {
             console.error('Error fetching discounted products:', error);
             res.status(500).json({ message: error.message });
         }},
+// create a new product     
     createProduct: async (req, res) => {
         const { title, description, price, category, images,mainImage , discount} = req.body;
         try {
@@ -62,6 +67,8 @@ const productControllers = {
             return res.status(500).json({ message: error.message });
         }
     },
+
+    // update a product
     updateProduct: async (req, res) => {
         const { id } = req.params;
         const { title, description, price, category, mainImage, images,discount } = req.body;
@@ -85,6 +92,7 @@ const productControllers = {
             res.status(500).json({ message: error.message });
         }
     },
+    // delete a product  FROM THE DATABASE
     deleteProduct: async (req, res) => {
         const { id } = req.params;
         console.log(`Attempting to delete product with ID: ${id}`);
