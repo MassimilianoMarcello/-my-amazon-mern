@@ -10,11 +10,13 @@ const CreateProduct = () => {
     const [category, setCategory] = useState('Smartphones');
     const [mainImage, setMainImage] = useState('');
     const [images, setImages] = useState(['']);
+    const [discount, setDiscount] = useState(0);
+
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const product = { title, description, price, category, mainImage, images };
+        const product = { title, description, price, category, mainImage, images ,     discount};
 
         try {
             const response = await axios.post('http://localhost:5004/api/products', product, {
@@ -61,6 +63,7 @@ const CreateProduct = () => {
                     <option value="Tablets">Tablets</option>
                     <option value="Accessories">Accessories</option>
                     <option value="Wearables">Wearables</option>
+                    <option value="Generic">Generic</option>
                 </select>
             </div>
             <div>
@@ -90,6 +93,15 @@ const CreateProduct = () => {
                     Add Image
                 </button>
             </div>
+            <div className="form-group">
+                    <label htmlFor="discount">Discount (%)</label>
+                    <input
+                        type="number"
+                        id="discount"
+                        value={discount}
+                        onChange={(e) => setDiscount(e.target.value)}
+                    />
+                </div>
             <button type="submit">Create Product</button>
         </form>
     );

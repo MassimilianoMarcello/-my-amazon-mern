@@ -1,13 +1,12 @@
-/* ProductCard.css */
 .product-card {
+    width: 40%;
+    position: relative;
     border: 1px solid #ddd;
     border-radius: 8px;
-    width: 45%;
     padding: 16px;
     margin: 16px;
     text-align: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: white;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
@@ -16,10 +15,21 @@
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
+.discount-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #ff0000;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
 .product-image {
-    width: 100%;
+    width: 60%;
     height: auto;
-    align-items: center;
     border-radius: 8px;
     object-fit: cover;
     margin-bottom: 12px;
@@ -41,8 +51,16 @@
 
 .product-price {
     font-size: 1rem;
-    color: #007bff;
     margin-bottom: 12px;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+}
+
+.discounted-price {
+    color: #ff0000;
 }
 
 .details-link {

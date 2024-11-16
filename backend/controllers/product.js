@@ -31,7 +31,7 @@ const productControllers = {
         }
     },
     createProduct: async (req, res) => {
-        const { title, description, price, category, images,mainImage } = req.body;
+        const { title, description, price, category, images,mainImage , discount} = req.body;
         try {
             const product = await Product.create({
                 title,
@@ -39,7 +39,8 @@ const productControllers = {
                 price,
                 category,
                 images,
-                mainImage
+                mainImage,
+                discount
             });
             res.status(201).json(product);
         } catch (error) {
@@ -48,7 +49,7 @@ const productControllers = {
     },
     updateProduct: async (req, res) => {
         const { id } = req.params;
-        const { title, description, price, category, mainImage, images } = req.body;
+        const { title, description, price, category, mainImage, images,discount } = req.body;
         try {
             const product = await Product.findById(id);
             if (!product) {
@@ -61,6 +62,7 @@ const productControllers = {
             product.category = category || product.category;
             product.mainImage = mainImage || product.mainImage;
             product.images = images || product.images;
+            product.discount = discount || product.discount;
 
             await product.save();
             res.json(product);

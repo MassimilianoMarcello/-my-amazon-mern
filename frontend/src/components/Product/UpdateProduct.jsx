@@ -11,7 +11,7 @@ const UpdateProduct = () => {
     const [category, setCategory] = useState('Smartphones');
     const [mainImage, setMainImage] = useState('');
     const [images, setImages] = useState(['']);
-
+    const [discount, setDiscount] = useState(0);
     useEffect(() => {
         const fetchProduct = async () => {
             try {
@@ -23,6 +23,7 @@ const UpdateProduct = () => {
                 setCategory(product.category);
                 setMainImage(product.mainImage);
                 setImages(product.images);
+                setDiscount(product.discount);
             } catch (error) {
                 console.error('Error fetching product:', error);
             }
@@ -33,7 +34,7 @@ const UpdateProduct = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const product = { title, description, price, category, mainImage, images };
+        const product = { title, description, price, category, mainImage, images, discount };
 
         try {
             const response = await axios.put(`http://localhost:5004/api/products/${id}`, product, {
@@ -94,7 +95,17 @@ const UpdateProduct = () => {
                 <button type="button" onClick={() => setImages([...images, ''])}>
                     Add Image
                 </button>
+                
             </div>
+            <div className="form-group">
+                    <label htmlFor="discount">Discount (%)</label>
+                    <input
+                        type="number"
+                        id="discount"
+                        value={discount}
+                        onChange={(e) => setDiscount(e.target.value)}
+                    />
+                </div>
             <button type="submit">Update Product</button>
         </form>
     );

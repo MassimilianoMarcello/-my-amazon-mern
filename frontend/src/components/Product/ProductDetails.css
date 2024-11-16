@@ -1,105 +1,45 @@
-/* ProductDetails.css */
 .product-details {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #f9f9f9;
-    overflow: hidden;
-}
-
-.product-thumbnails {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-}
-
-.product-thumbnail {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    cursor: pointer;
-    border: 2px solid transparent;
-    border-radius: 4px;
-}
-
-.product-thumbnail:hover {
-    border: 2px solid #000;
+    align-items: center;
+    padding: 20px;
 }
 
 .product-main-image {
-    width: 100%;
+    width: 50%;
+    max-width: 200px;
     height: auto;
-    max-height: 600px;
-    object-fit: contain;
-    border-radius: 4px;
-    background-color: #fff;
+    border-radius: 8px;
+    margin-bottom: 20px;
 }
 
 .product-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    grid-column: span 2;
+    text-align: center;
 }
 
 .product-title {
     font-size: 2rem;
     font-weight: 600;
     color: #333;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
+}
+
+.product-price {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+}
+
+.discounted-price {
+    color: #ff0000;
 }
 
 .product-description {
     font-size: 1rem;
     color: #555;
-    margin-bottom: 16px;
-}
-
-.product-category {
-    font-size: 1rem;
-    color: #777;
-    margin-bottom: 16px;
-}
-
-.product-price {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #007bff;
-    margin-bottom: 16px;
-}
-
-.product-buttons {
-    display: flex;
-    gap: 10px;
     margin-bottom: 20px;
-}
-
-.add-to-cart-button,
-.edit-product-button,
-.delete-product-button {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.add-to-cart-button:hover,
-.edit-product-button:hover,
-.delete-product-button:hover {
-    background-color: #218838;
-}
-
-.delete-product-button {
-    background-color: #dc3545;
-}
-
-.delete-product-button:hover {
-    background-color: #c82333;
 }
