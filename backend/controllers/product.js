@@ -51,9 +51,53 @@ const productControllers = {
             res.status(500).json({ message: error.message });
         }
     },
+    getFeaturedProducts: async (req, res) => {
+        try {
+            const featuredProducts = await Product.find({ isFeatured: true })
+                .sort({ createdAt: -1 })
+                .limit(10);
+    
+            if (!featuredProducts.length) {
+                return res.status(404).json({ message: 'No featured products found' });
+            }
+    
+            res.json(featuredProducts);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Server error' });
+        }
+    },
+    
+
+    getNewArrivals: async (req, res) => {
+        try {
+            const newArrivals = await Product.find({ newArrivals: true }).sort({ createdAt: -1 }).limit(10);
+            res.json(newArrivals);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    },
+
+    getRecommendedProducts: async (req, res) => {
+        try {
+            const recommendedProducts = await Product.find({ isRecommended: true });
+            res.json(recommendedProducts);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    },
+
+    getDailyDeals: async (req, res) => {
+        try {
+            const dailyDeals = await Product.find({ isDailyDeal: true });
+            res.json(dailyDeals);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    },
 // create a new product     
     createProduct: async (req, res) => {
-        const { title, description, price, category, images,mainImage , discount} = req.body;
+        const { title, description, price, category, images,mainImage , discount, isFeatured,isRecommended,isDailyDeal,newArrivals} = req.body;
         try {
             const product = await Product.create({
                 title,
@@ -62,7 +106,11 @@ const productControllers = {
                 category,
                 images,
                 mainImage,
-                discount
+                discount,
+                isFeatured,
+                isRecommended,
+                isDailyDeal ,
+                newArrivals
             });
             res.status(201).json(product);
         } catch (error) {
@@ -73,7 +121,7 @@ const productControllers = {
     // update a product
     updateProduct: async (req, res) => {
         const { id } = req.params;
-        const { title, description, price, category, mainImage, images,discount } = req.body;
+        const { title, description, price, category, mainImage, images,discount,isDailyDeal,isFeatured,isRecommended,newArrivals } = req.body;
         try {
             const product = await Product.findById(id);
             if (!product) {
@@ -87,6 +135,10 @@ const productControllers = {
             product.mainImage = mainImage || product.mainImage;
             product.images = images || product.images;
             product.discount = discount || product.discount;
+            product.isDailyDeal = isDailyDeal || product.isDailyDeal;
+            product.isFeatured = isFeatured || product.isFeatured;
+            product.isRecommended = isRecommended || product.isRecommended;
+            product.newArrivals = newArrivals || product.newArrivals;
 
             await product.save();
             res.json(product);

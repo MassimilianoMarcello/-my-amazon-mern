@@ -11,12 +11,17 @@ const CreateProduct = () => {
     const [mainImage, setMainImage] = useState('');
     const [images, setImages] = useState(['']);
     const [discount, setDiscount] = useState(0);
+    const [isFeatured, setIsFeatured] = useState(false);
+    const [isRecommended, setIsRecommended] = useState(false);
+    const [isDailyDeal, setIsDailyDeal] = useState(false);
+    const [isNerArrivals, setIsNewArrivals] = useState(false);
+  
 
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const product = { title, description, price, category, mainImage, images ,     discount};
+        const product = { title, description, price, category, mainImage, images ,discount,isFeatured,isRecommended,isDailyDeal,isNerArrivals};
 
         try {
             const response = await axios.post('http://localhost:5004/api/products', product, {
@@ -96,6 +101,22 @@ const CreateProduct = () => {
             <div>
                 <label>Discount (%):</label>
                 <input type="number" value={discount} onChange={(e) => setDiscount(e.target.value)} min="0" max="100" />
+            </div>
+            <div>
+                <label>Featured:</label>
+                <input type="checkbox" checked={isFeatured} onChange={(e) => setIsFeatured(e.target.checked)} />
+            </div>
+            <div>
+                <label>Recommended:</label>
+                <input type="checkbox" checked={isRecommended} onChange={(e) => setIsRecommended(e.target.checked)} />
+            </div>
+            <div>
+                <label>Daily Deal:</label>
+                <input type="checkbox" checked={isDailyDeal} onChange={(e) => setIsDailyDeal(e.target.checked)} />
+            </div>
+            <div>
+                <label>New Arrivals:</label>
+                <input type="checkbox" checked={isNerArrivals} onChange={(e) => setIsNewArrivals(e.target.checked)} />
             </div>
             <button type="submit">Create Product</button>
         </form>

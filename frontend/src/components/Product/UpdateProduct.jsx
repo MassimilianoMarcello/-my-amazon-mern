@@ -15,6 +15,11 @@ const UpdateProduct = () => {
     const [discount, setDiscount] = useState(0);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [isFeatured, setIsFeatured] = useState(false);
+    const [isRecommended, setIsRecommended] = useState(false);
+    const [isDailyDeal, setIsDailyDeal] = useState(false);
+    const [newArrivals, setNewArrivals] = useState(false);
+
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -28,6 +33,11 @@ const UpdateProduct = () => {
                 setMainImage(product.mainImage);
                 setImages(product.images);
                 setDiscount(product.discount);
+                setIsFeatured(product.isFeatured);
+                setIsRecommended(product.isRecommended);
+                setIsDailyDeal(product.isDailyDeal);
+                setNewArrivals(product.newArrivals);
+
             } catch (error) {
                 setError(error.response.data.message);
             }
@@ -46,7 +56,11 @@ const UpdateProduct = () => {
                 category,
                 mainImage,
                 images,
-                discount
+                discount,
+                isFeatured,
+                isRecommended,
+                isDailyDeal,
+                newArrivals
             });
             setSuccess('Product updated successfully');
             setError('');
@@ -148,6 +162,47 @@ const UpdateProduct = () => {
                         max="100"
                     />
                 </div>
+                <div className="form-group">
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={isFeatured}
+                            onChange={(e) => setIsFeatured(e.target.checked)}
+                        />
+                        Featured
+                    </label>
+                </div>
+                <div className="form-group">
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={isRecommended}
+                            onChange={(e) => setIsRecommended(e.target.checked)}
+                        />
+                        Recommended
+                    </label>
+                </div>
+                <div className="form-group">
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={isDailyDeal}
+                            onChange={(e) => setIsDailyDeal(e.target.checked)}
+                        />
+                        Daily Deal
+                    </label>
+                </div>
+                <div className="form-group">
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={newArrivals}
+                            onChange={(e) => setNewArrivals(e.target.checked)}
+                        />
+                        New Arrivals
+                    </label>
+                </div>
+                
                 <button type="submit">Update Product</button>
             </form>
         </div>

@@ -35,7 +35,24 @@ const productSchema = new mongoose.Schema({
     isDiscounted: {
         type: Boolean,
         default: false // Default is not discounted
+    },
+    isFeatured: {
+        type: Boolean,
+        default: false // Default is not featured
+    },
+    isRecommended: {
+        type: Boolean,
+        default: false // Default is not recommended
+    },
+    isDailyDeal: {
+        type: Boolean,
+        default: false // Default is not a daily deal
+    },
+    newArrivals: {
+        type: Boolean,
+        default: false // Default is not a new arrival
     }
+
 }, {
     timestamps: true
 });

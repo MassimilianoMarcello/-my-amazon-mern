@@ -35,10 +35,10 @@ const itemControllers = {
         }
     },
     addItem: async (req, res) => {
-        const { quantity, user_id, price, title} = req.body;
+        const { quantity, user_id, price, title, description,category} = req.body;
 
         try {
-            if (!title || !price || !quantity || !user_id ) {
+            if (!title || !price || !quantity || !user_id || !description || !category) {
                 return res
                     .status(400)
                     .json({ message: 'All fields are required' });
@@ -58,6 +58,8 @@ const itemControllers = {
                 user_id,
                 price,
                 title,
+                description,
+                category
              
             });
             res.status(201).json(item);
@@ -69,19 +71,23 @@ const itemControllers = {
         const { quantity } = req.body;
         const { id } = req.params;
         try {
+            // Usa `findByIdAndUpdate` per ottenere il documento aggiornato
             const item = await Item.findByIdAndUpdate(
-                { _id: id },
+                id,
                 { quantity },
                 { new: true }
             );
+    
             if (!item) {
                 return res.status(404).json({ message: 'Item not found' });
             }
-            res.json(item);
+    
+            res.status(200).json({ message: 'Item updated', item });
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
     },
+    
     deleteItem: async (req, res) => {
         const { id } = req.params;
         try {

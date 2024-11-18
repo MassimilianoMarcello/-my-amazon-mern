@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 import './Navbar.css';
 
 const Navbar = () => {
-    const userId = sessionStorage.getItem('userId'); // Ottieni l'ID dell'utente dal session storage
+    const userId = sessionStorage.getItem('userId'); 
 
 
     return (
