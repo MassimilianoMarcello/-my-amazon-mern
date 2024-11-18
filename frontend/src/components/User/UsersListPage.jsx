@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import UpdateUserRole from './UpdateUserRole';
+import './UsersListPage.css';
 
 const GetAllUsers = () => {
     const [users, setUsers] = useState([]);

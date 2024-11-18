@@ -25,6 +25,7 @@ const itemControllers = {
     },
     getItemsByUser: async (req, res) => {
         const { id } = req.params;
+           console.log("User ID ricevuto:", id);
         try {
             console.log(`Fetching items for user_id: ${id}`);
             const items = await Item.find({ user_id: id });

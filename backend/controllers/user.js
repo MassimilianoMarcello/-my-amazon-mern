@@ -11,7 +11,7 @@ const userControllers = {
     // Get all users
     getAllUsers: async (req, res) => {
         try {
-            const users = await User.find({}, 'email role _id'); // Seleziona solo email, role e _id
+            const users = await User.find({}, 'email role _id'); 
             res.json(users);
         } catch (error) {
             res.status(500).json({ message: error.message });
@@ -124,13 +124,15 @@ const userControllers = {
                     .json({ message: 'All fields are required' });
 
             const userExists = await User.findOne({ email });
-                
+            if (!userExists) {
+                return res.status(400).json({ message: 'Invalid credentials' });
+            } 
   
             const isPasswordCorrect = await bcrypt.compare(
                 password,
                 userExists.password
             );
-            if (!userExists || !isPasswordCorrect) {
+            if (!isPasswordCorrect) {
                 return res.status(400).json({ message: 'Invalid credentials' });
             }
             const token = jwt.sign(
@@ -139,7 +141,7 @@ const userControllers = {
             );
 
             res.cookie('token', token, { httpOnly: true });
-            res.json({ message: 'Login successful', userId: userExists._id });
+            res.json({ message: 'Login successful', userId: userExists._id, username: userExists.username, role: userExists.role  });
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }

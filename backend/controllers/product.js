@@ -15,6 +15,7 @@ const productControllers = {
         const {id}=req.params;
         try {
             const product = await Product.findById(id);
+            
             if (!product) {
                 return res.status(404).json({ message: 'Product not found' });
             }
@@ -37,9 +38,9 @@ const productControllers = {
 
     getDiscountedProducts: async (req, res) => {
         try {
-            console.log('Querying for discounted products...');
+            // console.log('Querying for discounted products...');
             const discountedProducts = await Product.find({ isDiscounted: true });
-            console.log('Discounted products found:', discountedProducts);
+            // console.log('Discounted products found:', discountedProducts);
             
             if (discountedProducts.length === 0) {
                 return res.status(404).json({ message: 'No discounted products found' });

@@ -40,10 +40,12 @@ const Login = () => {
 
             if (res.status === 200 && res.data.message === 'Login successful') {
                 sessionStorage.setItem('userId', res.data.userId);
+                sessionStorage.setItem('username', res.data.username);
                 setEmail('');
                 setPassword('');
                 setError('');
                 navigate('/');
+                window.location.reload();
             } else {
                 setError('Invalid credentials');
             }

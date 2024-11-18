@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get('/items', getAllItems);
 router.get('/items/:id', getItem);
-router.get('/items/user/:id', getItemsByUser);
+router.get('/items/items/user/:id', getItemsByUser);
 router.post('/items', addItem);
 router.put('/items/:id', updateItem);
 router.delete('/items/:id', deleteItem);
