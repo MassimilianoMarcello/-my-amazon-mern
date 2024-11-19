@@ -36,38 +36,28 @@ const itemControllers = {
         }
     },
     addItem: async (req, res) => {
-        const { quantity, user_id, price, title, description,category} = req.body;
-
+        const { quantity, user_id, price, title } = req.body;
+    
         try {
-            if (!title || !price || !quantity || !user_id || !description || !category) {
-                return res
-                    .status(400)
-                    .json({ message: 'All fields are required' });
+            if (!title || !price || !quantity || !user_id) {
+                return res.status(400).json({ message: 'All fields are required' });
             }
-            if (
-                typeof price !== 'number' ||
-                typeof quantity !== 'number' ||
-                quantity < 1
-            ) {
-                return res
-                    .status(400)
-                    .json({ message: 'Invalid price or quantity' });
+            if (typeof price !== 'number' || typeof quantity !== 'number' || quantity < 1) {
+                return res.status(400).json({ message: 'Invalid price or quantity' });
             }
-
+    
             const item = await Item.create({
                 quantity,
                 user_id,
                 price,
-                title,
-                description,
-                category
-             
+                title
             });
             res.status(201).json(item);
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
     },
+    
     updateItem: async (req, res) => {
         const { id } = req.params;
         const { quantity } = req.body;

@@ -10,6 +10,7 @@ const ProductDetails = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [mainImage, setMainImage] = useState('');
+    const [message, setMessage] = useState('');
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -26,6 +27,33 @@ const ProductDetails = () => {
 
         fetchProduct();
     }, [id]);
+        // Aggiungi al carrello
+        const handleAddToCart = async () => {
+            const userId = sessionStorage.getItem('userId');
+            if (!userId) {
+                setMessage("Please log in to add items to your cart.");
+                return;
+            }
+    
+            try {
+                const response = await axios.post(
+                    'http://localhost:5004/api/items/add',
+                    {
+                        title: product.title,
+                        price: product.price,
+                        quantity: 1,
+                        user_id: userId,
+                    },
+                    { withCredentials: true }
+                );
+                if (response.status === 201) {
+                    setMessage("Item added to cart successfully.");
+                }
+            // eslint-disable-next-line no-unused-vars
+            } catch (error) {
+                setMessage("Failed to add item to cart. Please try again.");
+            }
+        };
 
     if (loading) {
         return <p>Loading...</p>;
@@ -59,10 +87,12 @@ const ProductDetails = () => {
             <div>
                 <img src={mainImage} alt={product.title} className="product-main-image" />
                 <div className="product-buttons">
-                    <button className="add-to-cart-button">Add to Cart</button>
+                <button className="add-to-cart-button" onClick={handleAddToCart}>Add to Cart</button>
+  
                     <button className="edit-product-button" onClick={() => navigate(`/update-product/${id}`)}>Edit</button>
                     <button className="delete-product-button" onClick={() => navigate(`/delete-product/${id}`)}>Delete</button>
                 </div>
+                {message && <p>{message}</p>}
             </div>
             <div className="product-info">
                 <h1 className="product-title">{product.title}</h1>
