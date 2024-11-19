@@ -5,6 +5,8 @@ import './ProductDetails.css';
 import PropTypes from 'prop-types';
 
 const ProductDetails = ({ setCartItemCount }) => {
+    const userId = sessionStorage.getItem('userId');
+    
     const { id } = useParams();
     const navigate = useNavigate();
     const [product, setProduct] = useState(null);
@@ -13,6 +15,8 @@ const ProductDetails = ({ setCartItemCount }) => {
     const [mainImage, setMainImage] = useState('');
     const [message, setMessage] = useState('');
     const [quantity, setQuantity] = useState(1);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const[isAdmin, setIsAdmin] = useState(false);
 
     const handleQuantityChange = (e) => {
         const newQuantity = Number(e.target.value);
@@ -20,6 +24,25 @@ const ProductDetails = ({ setCartItemCount }) => {
             setQuantity(newQuantity);
         }
     };
+    useEffect(() => {
+        const checkAdmin = async () => {
+            try {
+                const res = await axios.get(`http://localhost:5004/api/users/${userId}`, {
+                    withCredentials: true,
+                });
+                if (res.status === 200 && res.data.role === 'admin') {
+                    setIsAdmin(true);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        if (userId) {
+            setIsLoggedIn(true);
+            checkAdmin();
+        }
+    }, [userId]);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -28,7 +51,7 @@ const ProductDetails = ({ setCartItemCount }) => {
                     `http://localhost:5004/api/products/${id}`
                 );
                 setProduct(response.data);
-                setMainImage(response.data.mainImage); // Imposta l'immagine principale
+                setMainImage(response.data.mainImage); // set the main image
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -40,7 +63,7 @@ const ProductDetails = ({ setCartItemCount }) => {
     }, [id]);
 
     const handleAddToCart = async () => {
-        const userId = sessionStorage.getItem('userId');
+        // const userId = sessionStorage.getItem('userId');
         if (!userId) {
             setMessage("Please log in to add items to your cart.");
             return;
@@ -118,21 +141,22 @@ const ProductDetails = ({ setCartItemCount }) => {
                     className="product-main-image"
                 />
                 <div className="product-buttons">
-                    <input
+                    
+{isLoggedIn && ( <><input
                         type="number"
                         value={quantity}
                         min="1"
                         step="1"
                         onChange={handleQuantityChange}
-                    />
+                    /><button
+                    className="add-to-cart-button"
+                    onClick={handleAddToCart}
+                >
+                    Add to Cart
+                </button></>  )}      
 
-                    <button
-                        className="add-to-cart-button"
-                        onClick={handleAddToCart}
-                    >
-                        Add to Cart
-                    </button>
-                    <button
+                    {isAdmin && (<>
+                        <button
                         className="edit-product-button"
                         onClick={() => navigate(`/update-product/${id}`)}
                     >
@@ -144,6 +168,9 @@ const ProductDetails = ({ setCartItemCount }) => {
                     >
                         Delete
                     </button>
+                    </>)}
+           
+             
                 </div>
                 {message && <p>{message}</p>}
             </div>

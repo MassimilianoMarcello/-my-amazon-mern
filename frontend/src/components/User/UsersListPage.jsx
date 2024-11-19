@@ -23,6 +23,12 @@ const GetAllUsers = () => {
         fetchUsers();
     }, []);
 
+    const updateUserRole = (userId, newRole) => {
+        setUsers(users.map(user => 
+            user._id === userId ? { ...user, role: newRole } : user
+        ));
+    };
+
     if (loading) {
         return <p>Loading...</p>;
     }
@@ -49,7 +55,13 @@ const GetAllUsers = () => {
                             <td>{user.email}</td>
                             <td>{user._id}</td>
                             <td>{user.role}</td>
-                            <td><UpdateUserRole userId={user._id} /></td>
+                            <td>
+                                <UpdateUserRole 
+                                    userId={user._id} 
+                                    currentRole={user.role} 
+                                    onRoleChange={updateUserRole} 
+                                />
+                            </td>
                         </tr>
                     ))}
                 </tbody>
