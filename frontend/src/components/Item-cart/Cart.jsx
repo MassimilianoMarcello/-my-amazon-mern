@@ -17,7 +17,10 @@ const Cart = ({ setCartItemCount }) => {
                 });
                 if (response.status === 200 && response.data.length > 0) {
                     setItems(response.data);
-                    updateCartItemCount(response.data); // Aggiorna il conteggio
+
+                    // Calculate and update the cart item count
+                    const totalItemCount = response.data.reduce((acc, item) => acc + item.quantity, 0);
+                    setCartItemCount(totalItemCount);
                 } else {
                     setError('Unexpected response format');
                 }
@@ -34,13 +37,7 @@ const Cart = ({ setCartItemCount }) => {
             setLoading(false);
             setError('User ID is not available');
         }
-    }, [userId]);
-
-    // Update the total item count in the cart
-    const updateCartItemCount = (cartItems) => {
-        const totalItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-        setCartItemCount(totalItemCount);
-    };
+    }, [userId, setCartItemCount]);
 
     // Update quantity of an item
     const handleQuantityChange = async (itemId, newQuantity) => {
@@ -53,7 +50,10 @@ const Cart = ({ setCartItemCount }) => {
             const updatedItem = response.data.item;
             const updatedItems = items.map(item => (item._id === itemId ? updatedItem : item));
             setItems(updatedItems);
-            updateCartItemCount(updatedItems); // Aggiorna il conteggio
+
+            // Aggiorna il conteggio degli articoli
+            const totalItemCount = updatedItems.reduce((acc, item) => acc + item.quantity, 0);
+            setCartItemCount(totalItemCount);
         } catch (error) {
             setError(error.message);
         }
@@ -67,7 +67,10 @@ const Cart = ({ setCartItemCount }) => {
             });
             const updatedItems = items.filter(item => item._id !== itemId);
             setItems(updatedItems);
-            updateCartItemCount(updatedItems); // Aggiorna il conteggio
+
+            // Aggiorna il conteggio degli articoli
+            const totalItemCount = updatedItems.reduce((acc, item) => acc + item.quantity, 0);
+            setCartItemCount(totalItemCount);
         } catch (error) {
             setError(error.message);
         }
@@ -128,11 +131,13 @@ const Cart = ({ setCartItemCount }) => {
         </div>
     );
 };
+
 Cart.propTypes = {
     setCartItemCount: PropTypes.func.isRequired,
 };
 
 export default Cart;
+
 
 
 
