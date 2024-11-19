@@ -15,6 +15,7 @@ const verifyToken = (req, res, next) => {
                 message: 'You are forbidden from accessing this page'
             });
         }
+        req.user = data;
         next();
     });
 };

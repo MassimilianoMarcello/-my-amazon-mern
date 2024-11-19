@@ -69,10 +69,10 @@ const itemControllers = {
         }
     },
     updateItem: async (req, res) => {
-        const { quantity } = req.body;
         const { id } = req.params;
+        const { quantity } = req.body;
+    
         try {
-            // Usa `findByIdAndUpdate` per ottenere il documento aggiornato
             const item = await Item.findByIdAndUpdate(
                 id,
                 { quantity },
@@ -85,9 +85,10 @@ const itemControllers = {
     
             res.status(200).json({ message: 'Item updated', item });
         } catch (error) {
-            return res.status(500).json({ message: error.message });
+            res.status(500).json({ message: error.message });
         }
     },
+    
     
     deleteItem: async (req, res) => {
         const { id } = req.params;

@@ -7,14 +7,13 @@ const Cart = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Fetch cart items when the component mounts or when userId changes
+    // Fetch cart items
     useEffect(() => {
         const fetchCartItems = async () => {
             try {
                 const response = await axios.get(`http://localhost:5004/api/items/items/user/${userId}`, {
                     withCredentials: true,
                 });
-                console.log('Cart items response:', response.data);
                 if (Array.isArray(response.data)) {
                     setItems(response.data);
                 } else {
@@ -35,7 +34,22 @@ const Cart = () => {
         }
     }, [userId]);
 
-    // Function to delete an item from the cart
+    // Update quantity of an item
+    const handleQuantityChange = async (itemId, newQuantity) => {
+        try {
+            const response = await axios.put(
+                `http://localhost:5004/api/items/${itemId}`,
+                { quantity: newQuantity },
+                { withCredentials: true }
+            );
+            const updatedItem = response.data.item;
+            setItems(items.map(item => (item._id === itemId ? updatedItem : item)));
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
+    // Delete an item from the cart
     const handleDelete = async (itemId) => {
         try {
             await axios.delete(`http://localhost:5004/api/items/${itemId}`, {
@@ -75,7 +89,14 @@ const Cart = () => {
                     {items.map(item => (
                         <tr key={item._id}>
                             <td>{item.title}</td>
-                            <td>{item.quantity}</td>
+                            <td>
+                                <input
+                                    type="number"
+                                    value={item.quantity}
+                                    min="1"
+                                    onChange={(e) => handleQuantityChange(item._id, Number(e.target.value))}
+                                />
+                            </td>
                             <td>{item.price.toFixed(2)} €</td>
                             <td>{(item.price * item.quantity).toFixed(2)} €</td>
                             <td>
@@ -97,6 +118,7 @@ const Cart = () => {
 };
 
 export default Cart;
+
 
 
 
