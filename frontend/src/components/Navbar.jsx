@@ -38,27 +38,7 @@ const Navbar = () => {
             }
         };
 
-        // const getCartItems = async () => {
-        //     try {
-        //         const res = await axios.get(`http://localhost:5004/api/items/items/user/${userId}`, {
-        //             withCredentials: true,
-        //         });
-        
-        //         if (res.status === 200) {
-        //             console.log('Dati ricevuti dal server:', res.data); // Log per verificare i dati ricevuti
-        
-        //             if (res.data.length > 0) {
-        //                 const totalItems = calculateItems(res.data);
-        //                 console.log('Total items:', totalItems);
-        //                 setItem(totalItems);
-        //             } else {
-        //                 setItem(0);
-        //             }
-        //         }
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // };
+
 
         const checkAdmin = async () => {
             try {

@@ -19,6 +19,7 @@ import DeleteProduct from './components/Product/Deleteproduct';
 import CategoryProducts from './components/Product/CategoryProducts';
 import DiscountedProducts from './components/HomePage/DiscountedProducts';
 import Home from './Home';
+import Cart from './components/Item-cart/Cart';
 
 
 const App = () => {
@@ -53,7 +54,9 @@ const App = () => {
                         path="/delete-product/:id"
                         element={<DeleteProduct />}
                     />{' '}
-                    {/* Aggiungi la rotta per DeleteProduct */}
+                  {/* SHOPPING CART */}
+                  <Route path="/cart" element={<Cart />} />
+          
                 </Routes>
             </div>
         </Router>

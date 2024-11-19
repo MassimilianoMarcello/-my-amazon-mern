@@ -9,8 +9,9 @@ const Logout = () => {
         const logoutUser = async () => {
             try {
                 await axios.post('http://localhost:5004/api/logout');
-                sessionStorage.removeItem('userId'); // Rimuove l'ID dell'utente dal session storage
-                navigate('/login'); // Reindirizza alla pagina di login
+                sessionStorage.removeItem('userId'); 
+                sessionStorage.removeItem('username');
+                navigate('/login'); 
             } catch (error) {
                 console.error('Error logging out:', error);
             }
