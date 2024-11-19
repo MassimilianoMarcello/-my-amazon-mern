@@ -46,15 +46,15 @@ const itemControllers = {
                 return res.status(400).json({ message: 'Invalid price or quantity' });
             }
     
-            // Verifica se l'articolo è già presente nel carrello
+            // Verifify if the product exists  in the database shopping cart
             const existingItem = await Item.findOne({ user_id, title });
     
             if (existingItem) {
-                // Se il prodotto è già nel carrello, aggiorna la quantità
+                // if the product is already in the database update the quantity
                 existingItem.quantity += quantity;
                 await existingItem.save();
     
-                // Ottieni il conteggio totale degli articoli nel carrello dell'utente
+                // Get the total count of items in the user's cart
                 const totalItemCount = await Item.aggregate([
                     { $match: { user_id } },
                     { $group: { _id: null, totalQuantity: { $sum: '$quantity' } } }
@@ -67,7 +67,7 @@ const itemControllers = {
                     item: existingItem
                 });
             } else {
-                // Se il prodotto non è nel carrello, crealo
+                // if the product is not in the database create a new item
                 const item = await Item.create({
                     quantity,
                     user_id,
@@ -75,7 +75,7 @@ const itemControllers = {
                     title
                 });
     
-                // Ottieni il conteggio totale degli articoli nel carrello dell'utente
+                // Get the total count of items in the user's cart
                 const totalItemCount = await Item.aggregate([
                     { $match: { user_id } },
                     { $group: { _id: null, totalQuantity: { $sum: '$quantity' } } }
