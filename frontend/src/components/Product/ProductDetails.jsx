@@ -61,14 +61,21 @@ const ProductDetails = ({ setCartItemCount }) => {
             if (response.status === 201 || response.status === 200) {
                 setMessage(`Item added to cart successfully. Quantity added: ${response.data.addedQuantity}`);
                 
-                // Aggiorna il conteggio degli articoli nel carrello nel componente principale
-                setCartItemCount(response.data.totalItemCount);
+                // Ricalcola il conteggio degli articoli nel carrello dopo l'aggiunta
+                const cartResponse = await axios.get(`http://localhost:5004/api/items/items/user/${userId}`, {
+                    withCredentials: true,
+                });
+    
+                // Calcola il totale degli articoli nel carrello
+                const totalItemCount = cartResponse.data.reduce((acc, item) => acc + item.quantity, 0);
+                setCartItemCount(totalItemCount);
             }
         // eslint-disable-next-line no-unused-vars
         } catch (error) {
             setMessage("Failed to add item to cart. Please try again.");
         }
     };
+    
     
     
     
