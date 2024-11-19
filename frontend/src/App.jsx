@@ -24,7 +24,7 @@ import Cart from './components/Item-cart/Cart';
 const App = () => {
     const [cartItemCount, setCartItemCount] = useState(0);
 
-    // Effettua il fetch degli articoli nel carrello dopo il login
+    //fetch cart items count on page load
     useEffect(() => {
         const fetchCartItemCount = async () => {
             const userId = sessionStorage.getItem('userId');

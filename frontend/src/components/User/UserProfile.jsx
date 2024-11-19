@@ -13,7 +13,9 @@ const UserProfile = () => {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await axios.get(`http://localhost:5004/api/users/${id}`);
+                const response = await axios.get(`http://localhost:5004/api/users/${id}` , {
+                    withCredentials: true,
+                });
                 setUser(response.data);
             } catch (error) {
                 setError(error.message);

@@ -6,9 +6,9 @@ import PropTypes from 'prop-types';
 
 const ProductDetails = ({ setCartItemCount }) => {
     const userId = sessionStorage.getItem('userId');
-    
     const { id } = useParams();
     const navigate = useNavigate();
+    
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -16,23 +16,20 @@ const ProductDetails = ({ setCartItemCount }) => {
     const [message, setMessage] = useState('');
     const [quantity, setQuantity] = useState(1);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const[isAdmin, setIsAdmin] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     const handleQuantityChange = (e) => {
         const newQuantity = Number(e.target.value);
-        if (newQuantity > 0) {
-            setQuantity(newQuantity);
-        }
+        if (newQuantity > 0) setQuantity(newQuantity);
     };
+// check if the user is logged in and if they are an admin
     useEffect(() => {
         const checkAdmin = async () => {
             try {
                 const res = await axios.get(`http://localhost:5004/api/users/${userId}`, {
                     withCredentials: true,
                 });
-                if (res.status === 200 && res.data.role === 'admin') {
-                    setIsAdmin(true);
-                }
+                if (res.status === 200 && res.data.role === 'admin') setIsAdmin(true);
             } catch (err) {
                 console.log(err);
             }
@@ -44,16 +41,15 @@ const ProductDetails = ({ setCartItemCount }) => {
         }
     }, [userId]);
 
+    // fetch product details by id and set the main image to the first image in the images array of the product object  
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await axios.get(
-                    `http://localhost:5004/api/products/${id}`
-                );
+                const response = await axios.get(`http://localhost:5004/api/products/${id}`);
                 setProduct(response.data);
-                setMainImage(response.data.mainImage); // set the main image
+                setMainImage(response.data.mainImage);
             } catch (error) {
-                setError(error.message);
+                setError(error.message || "An error occurred while fetching the product details.");
             } finally {
                 setLoading(false);
             }
@@ -62,35 +58,26 @@ const ProductDetails = ({ setCartItemCount }) => {
         fetchProduct();
     }, [id]);
 
+    // add the product to the cart
     const handleAddToCart = async () => {
-        // const userId = sessionStorage.getItem('userId');
         if (!userId) {
             setMessage("Please log in to add items to your cart.");
             return;
         }
-    
+
         try {
             const response = await axios.post(
                 'http://localhost:5004/api/items/add',
-                {
-                    title: product.title,
-                    price: product.price,
-                    quantity,
-                    user_id: userId,
-                },
+                { title: product.title, price: product.price, quantity, user_id: userId },
                 { withCredentials: true }
             );
-    
+
             if (response.status === 201 || response.status === 200) {
                 setMessage(`Item added to cart successfully. Quantity added: ${response.data.addedQuantity}`);
                 
-                // Ricalcola il conteggio degli articoli nel carrello dopo l'aggiunta
-                const cartResponse = await axios.get(`http://localhost:5004/api/items/items/user/${userId}`, {
-                    withCredentials: true,
-                });
-    
-                // Calcola il totale degli articoli nel carrello
+                const cartResponse = await axios.get(`http://localhost:5004/api/items/items/user/${userId}`, { withCredentials: true });
                 const totalItemCount = cartResponse.data.reduce((acc, item) => acc + item.quantity, 0);
+                
                 setCartItemCount(totalItemCount);
                 setQuantity(1);
             }
@@ -99,21 +86,11 @@ const ProductDetails = ({ setCartItemCount }) => {
             setMessage("Failed to add item to cart. Please try again.");
         }
     };
-    
-    
-    
-    
 
-    if (loading) {
-        return <p>Loading...</p>;
-    }
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>{error}</p>;
 
-    if (error) {
-        return <p>{error}</p>;
-    }
-
-    const discountedPrice =
-        product.price - product.price * (product.discount / 100);
+    const discountedPrice = product.price - product.price * (product.discount / 100);
 
     return (
         <div className="product-details">
@@ -135,42 +112,32 @@ const ProductDetails = ({ setCartItemCount }) => {
                 ))}
             </div>
             <div>
-                <img
-                    src={mainImage}
-                    alt={product.title}
-                    className="product-main-image"
-                />
+                <img src={mainImage} alt={product.title} className="product-main-image" />
                 <div className="product-buttons">
-                    
-{isLoggedIn && ( <><input
-                        type="number"
-                        value={quantity}
-                        min="1"
-                        step="1"
-                        onChange={handleQuantityChange}
-                    /><button
-                    className="add-to-cart-button"
-                    onClick={handleAddToCart}
-                >
-                    Add to Cart
-                </button></>  )}      
-
-                    {isAdmin && (<>
-                        <button
-                        className="edit-product-button"
-                        onClick={() => navigate(`/update-product/${id}`)}
-                    >
-                        Edit
-                    </button>
-                    <button
-                        className="delete-product-button"
-                        onClick={() => navigate(`/delete-product/${id}`)}
-                    >
-                        Delete
-                    </button>
-                    </>)}
-           
-             
+                    {isLoggedIn && (
+                        <>
+                            <input
+                                type="number"
+                                value={quantity}
+                                min="1"
+                                step="1"
+                                onChange={handleQuantityChange}
+                            />
+                            <button className="add-to-cart-button" onClick={handleAddToCart}>
+                                Add to Cart
+                            </button>
+                        </>
+                    )}
+                    {isAdmin && (
+                        <>
+                            <button className="edit-product-button" onClick={() => navigate(`/update-product/${id}`)}>
+                                Edit
+                            </button>
+                            <button className="delete-product-button" onClick={() => navigate(`/delete-product/${id}`)}>
+                                Delete
+                            </button>
+                        </>
+                    )}
                 </div>
                 {message && <p>{message}</p>}
             </div>
@@ -178,12 +145,8 @@ const ProductDetails = ({ setCartItemCount }) => {
                 <h1 className="product-title">{product.title}</h1>
                 {product.discount > 0 ? (
                     <div>
-                        <p className="product-price original-price">
-                            ${product.price.toFixed(2)}
-                        </p>
-                        <p className="product-price discounted-price">
-                            ${discountedPrice.toFixed(2)}
-                        </p>
+                        <p className="product-price original-price">${product.price.toFixed(2)}</p>
+                        <p className="product-price discounted-price">${discountedPrice.toFixed(2)}</p>
                     </div>
                 ) : (
                     <p className="product-price">${product.price.toFixed(2)}</p>
@@ -194,8 +157,10 @@ const ProductDetails = ({ setCartItemCount }) => {
         </div>
     );
 };
+
 ProductDetails.propTypes = {
     setCartItemCount: PropTypes.func.isRequired
 };
 
 export default ProductDetails;
+

@@ -11,7 +11,9 @@ const GetAllUsers = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:5004/api/users');
+                const response = await axios.get('http://localhost:5004/api/users' , {  // Fetch all users
+                    withCredentials: true,
+                });
                 setUsers(response.data);
             } catch (error) {
                 setError(error.message);

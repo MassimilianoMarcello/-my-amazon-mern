@@ -8,12 +8,20 @@ const { getAllItems, getItem, addItem, updateItem, deleteItem ,getItemsByUser} =
 const router = express.Router();
 
 // routes
+// not necessary
+// router.get('/items', getAllItems);
+// router.get('/items/:id', getItem);
 
-router.get('/items', getAllItems);
-router.get('/items/:id', getItem);
+//  get items that user put in cart
 router.get('/items/items/user/:id',verifyToken, getItemsByUser);
+
+// user put item in cart
 router.post('/items/add',verifyToken, addItem);
+
+// user modify quantity of item in cart
 router.put('/items/:id',verifyToken, updateItem);
-router.delete('/items/:id', deleteItem);
+
+// user delete item from cart
+router.delete('/items/:id', verifyToken, deleteItem);
 
 export default router;
