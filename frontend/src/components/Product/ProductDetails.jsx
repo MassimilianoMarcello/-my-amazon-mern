@@ -24,7 +24,9 @@ const ProductDetails = ({ setCartItemCount }) => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await axios.get(`http://localhost:5004/api/products/${id}`);
+                const response = await axios.get(
+                    `http://localhost:5004/api/products/${id}`
+                );
                 setProduct(response.data);
                 setMainImage(response.data.mainImage); // Imposta l'immagine principale
             } catch (error) {
@@ -43,7 +45,7 @@ const ProductDetails = ({ setCartItemCount }) => {
             setMessage("Please log in to add items to your cart.");
             return;
         }
-
+    
         try {
             const response = await axios.post(
                 'http://localhost:5004/api/items/add',
@@ -55,18 +57,21 @@ const ProductDetails = ({ setCartItemCount }) => {
                 },
                 { withCredentials: true }
             );
-            if (response.status === 201) {
-                setMessage("Item added to cart successfully.");
+    
+            if (response.status === 201 || response.status === 200) {
+                setMessage(`Item added to cart successfully. Quantity added: ${response.data.addedQuantity}`);
                 
-                // Aggiorna il conteggio degli articoli nel carrello
-                const totalItemCount = response.data.totalItemCount; // Assicurati che il server risponda con il conteggio aggiornato
-                setCartItemCount(totalItemCount);
+                // Aggiorna il conteggio degli articoli nel carrello nel componente principale
+                setCartItemCount(response.data.totalItemCount);
             }
         // eslint-disable-next-line no-unused-vars
         } catch (error) {
             setMessage("Failed to add item to cart. Please try again.");
         }
     };
+    
+    
+    
 
     if (loading) {
         return <p>Loading...</p>;
@@ -76,7 +81,8 @@ const ProductDetails = ({ setCartItemCount }) => {
         return <p>{error}</p>;
     }
 
-    const discountedPrice = product.price - (product.price * (product.discount / 100));
+    const discountedPrice =
+        product.price - product.price * (product.discount / 100);
 
     return (
         <div className="product-details">
@@ -98,17 +104,38 @@ const ProductDetails = ({ setCartItemCount }) => {
                 ))}
             </div>
             <div>
-                <img src={mainImage} alt={product.title} className="product-main-image" />
+                <img
+                    src={mainImage}
+                    alt={product.title}
+                    className="product-main-image"
+                />
                 <div className="product-buttons">
                     <input
                         type="number"
                         value={quantity}
                         min="1"
+                        step="1"
                         onChange={handleQuantityChange}
                     />
-                    <button className="add-to-cart-button" onClick={handleAddToCart}>Add to Cart</button>
-                    <button className="edit-product-button" onClick={() => navigate(`/update-product/${id}`)}>Edit</button>
-                    <button className="delete-product-button" onClick={() => navigate(`/delete-product/${id}`)}>Delete</button>
+
+                    <button
+                        className="add-to-cart-button"
+                        onClick={handleAddToCart}
+                    >
+                        Add to Cart
+                    </button>
+                    <button
+                        className="edit-product-button"
+                        onClick={() => navigate(`/update-product/${id}`)}
+                    >
+                        Edit
+                    </button>
+                    <button
+                        className="delete-product-button"
+                        onClick={() => navigate(`/delete-product/${id}`)}
+                    >
+                        Delete
+                    </button>
                 </div>
                 {message && <p>{message}</p>}
             </div>
@@ -116,8 +143,12 @@ const ProductDetails = ({ setCartItemCount }) => {
                 <h1 className="product-title">{product.title}</h1>
                 {product.discount > 0 ? (
                     <div>
-                        <p className="product-price original-price">${product.price.toFixed(2)}</p>
-                        <p className="product-price discounted-price">${discountedPrice.toFixed(2)}</p>
+                        <p className="product-price original-price">
+                            ${product.price.toFixed(2)}
+                        </p>
+                        <p className="product-price discounted-price">
+                            ${discountedPrice.toFixed(2)}
+                        </p>
                     </div>
                 ) : (
                     <p className="product-price">${product.price.toFixed(2)}</p>
@@ -129,8 +160,7 @@ const ProductDetails = ({ setCartItemCount }) => {
     );
 };
 ProductDetails.propTypes = {
-    setCartItemCount: PropTypes.func.isRequired,
+    setCartItemCount: PropTypes.func.isRequired
 };
-
 
 export default ProductDetails;

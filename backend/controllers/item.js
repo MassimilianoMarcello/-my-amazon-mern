@@ -53,7 +53,19 @@ const itemControllers = {
                 // Se il prodotto è già nel carrello, aggiorna la quantità
                 existingItem.quantity += quantity;
                 await existingItem.save();
-                return res.status(200).json(existingItem);
+    
+                // Ottieni il conteggio totale degli articoli nel carrello dell'utente
+                const totalItemCount = await Item.aggregate([
+                    { $match: { user_id } },
+                    { $group: { _id: null, totalQuantity: { $sum: '$quantity' } } }
+                ]);
+    
+                return res.status(200).json({
+                    message: `Item updated in cart. Quantity added: ${quantity}`,
+                    totalItemCount: totalItemCount[0]?.totalQuantity || 0,
+                    addedQuantity: quantity,
+                    item: existingItem
+                });
             } else {
                 // Se il prodotto non è nel carrello, crealo
                 const item = await Item.create({
@@ -62,12 +74,25 @@ const itemControllers = {
                     price,
                     title
                 });
-                res.status(201).json(item);
+    
+                // Ottieni il conteggio totale degli articoli nel carrello dell'utente
+                const totalItemCount = await Item.aggregate([
+                    { $match: { user_id } },
+                    { $group: { _id: null, totalQuantity: { $sum: '$quantity' } } }
+                ]);
+    
+                return res.status(201).json({
+                    message: `Item added to cart. Quantity added: ${quantity}`,
+                    totalItemCount: totalItemCount[0]?.totalQuantity || 0,
+                    addedQuantity: quantity,
+                    item
+                });
             }
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
     },
+    
     
     
     updateItem: async (req, res) => {
