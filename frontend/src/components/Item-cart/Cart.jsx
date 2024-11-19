@@ -22,7 +22,7 @@ const Cart = ({ setCartItemCount }) => {
                     const totalItemCount = response.data.reduce((acc, item) => acc + item.quantity, 0);
                     setCartItemCount(totalItemCount);
                 } else {
-                    setError('Unexpected response format');
+                    setItems([]); // Imposta una lista vuota se il carrello è vuoto
                 }
             } catch (error) {
                 setError(error.message);
@@ -68,7 +68,6 @@ const Cart = ({ setCartItemCount }) => {
             setError(error.message);
         }
     };
-    
 
     // Delete an item from the cart
     const handleDelete = async (itemId) => {
@@ -101,44 +100,48 @@ const Cart = ({ setCartItemCount }) => {
     return (
         <div>
             <h1>Your Cart</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Total</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {items.map(item => (
-                        <tr key={item._id}>
-                            <td>{item.title}</td>
-                            <td>
-                                <input
-                                    type="number"
-                                    value={item.quantity}
-                                    min="1"
-                                    onChange={(e) => handleQuantityChange(item._id, Number(e.target.value))}
-                                />
-                            </td>
-                            <td>{item.price.toFixed(2)} €</td>
-                            <td>{(item.price * item.quantity).toFixed(2)} €</td>
-                            <td>
-                                <button onClick={() => handleDelete(item._id)}>Delete</button>
-                            </td>
+            {items.length === 0 ? (
+                <p>Your cart is empty.</p>
+            ) : (
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                            <th>Action</th>
                         </tr>
-                    ))}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colSpan="3"><strong>Total</strong></td>
-                        <td><strong>{totalPrice.toFixed(2)} €</strong></td>
-                        <td></td>
-                    </tr>
-                </tfoot>
-            </table>
+                    </thead>
+                    <tbody>
+                        {items.map(item => (
+                            <tr key={item._id}>
+                                <td>{item.title}</td>
+                                <td>
+                                    <input
+                                        type="number"
+                                        value={item.quantity}
+                                        min="1"
+                                        onChange={(e) => handleQuantityChange(item._id, Number(e.target.value))}
+                                    />
+                                </td>
+                                <td>{item.price.toFixed(2)} €</td>
+                                <td>{(item.price * item.quantity).toFixed(2)} €</td>
+                                <td>
+                                    <button onClick={() => handleDelete(item._id)}>Delete</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colSpan="3"><strong>Total</strong></td>
+                            <td><strong>{totalPrice.toFixed(2)} €</strong></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            )}
         </div>
     );
 };
@@ -148,6 +151,7 @@ Cart.propTypes = {
 };
 
 export default Cart;
+
 
 
 

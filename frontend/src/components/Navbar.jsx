@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { FiShoppingCart } from 'react-icons/fi';
 import { CiSquarePlus, CiHome, CiUser, CiLogout } from 'react-icons/ci';
 import { AiOutlineProduct } from 'react-icons/ai';
+import { HiUsers } from "react-icons/hi2";
 import './Navbar.css';
 import PropTypes from 'prop-types';
 
@@ -76,7 +77,7 @@ const Navbar = ({ cartItemCount }) => {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/all-users">Users</NavLink>
+                            <NavLink to="/all-users"><HiUsers /> Users</NavLink>
                         </li>
                     </>
                 )}

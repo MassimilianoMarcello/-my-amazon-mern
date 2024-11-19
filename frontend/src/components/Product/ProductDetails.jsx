@@ -69,6 +69,7 @@ const ProductDetails = ({ setCartItemCount }) => {
                 // Calcola il totale degli articoli nel carrello
                 const totalItemCount = cartResponse.data.reduce((acc, item) => acc + item.quantity, 0);
                 setCartItemCount(totalItemCount);
+                setQuantity(1);
             }
         // eslint-disable-next-line no-unused-vars
         } catch (error) {
