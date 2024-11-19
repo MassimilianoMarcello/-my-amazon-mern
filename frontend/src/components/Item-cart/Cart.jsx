@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
-const Cart = () => {
+const Cart = ({ setCartItemCount }) => {
     const userId = sessionStorage.getItem('userId');
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -16,6 +17,7 @@ const Cart = () => {
                 });
                 if (Array.isArray(response.data)) {
                     setItems(response.data);
+                    updateCartItemCount(response.data); // Aggiorna il conteggio
                 } else {
                     setError('Unexpected response format');
                 }
@@ -34,6 +36,12 @@ const Cart = () => {
         }
     }, [userId]);
 
+    // Update the total item count in the cart
+    const updateCartItemCount = (cartItems) => {
+        const totalItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+        setCartItemCount(totalItemCount);
+    };
+
     // Update quantity of an item
     const handleQuantityChange = async (itemId, newQuantity) => {
         try {
@@ -43,7 +51,9 @@ const Cart = () => {
                 { withCredentials: true }
             );
             const updatedItem = response.data.item;
-            setItems(items.map(item => (item._id === itemId ? updatedItem : item)));
+            const updatedItems = items.map(item => (item._id === itemId ? updatedItem : item));
+            setItems(updatedItems);
+            updateCartItemCount(updatedItems); // Aggiorna il conteggio
         } catch (error) {
             setError(error.message);
         }
@@ -55,7 +65,9 @@ const Cart = () => {
             await axios.delete(`http://localhost:5004/api/items/${itemId}`, {
                 withCredentials: true,
             });
-            setItems(items.filter(item => item._id !== itemId));
+            const updatedItems = items.filter(item => item._id !== itemId);
+            setItems(updatedItems);
+            updateCartItemCount(updatedItems); // Aggiorna il conteggio
         } catch (error) {
             setError(error.message);
         }
@@ -116,8 +128,14 @@ const Cart = () => {
         </div>
     );
 };
+Cart.propTypes = {
+    setCartItemCount: PropTypes.func.isRequired,
+};
 
 export default Cart;
+
+
+
 
 
 

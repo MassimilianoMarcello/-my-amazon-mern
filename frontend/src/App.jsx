@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
@@ -21,18 +22,19 @@ import DiscountedProducts from './components/HomePage/DiscountedProducts';
 import Home from './Home';
 import Cart from './components/Item-cart/Cart';
 
-
 const App = () => {
+    // Stato condiviso per il conteggio degli articoli nel carrello
+    const [cartItemCount, setCartItemCount] = useState(0);
+
     return (
         <Router>
             <div>
-                {/* <Header title="My Amazon" /> */}
                 <Header />
-
-                <Navbar />
+                {/* Passa il conteggio del carrello come prop */}
+                <Navbar cartItemCount={cartItemCount} />
                 <Routes>
                     {/* users */}
-                    <Route path="/" element={<Home/>} />
+                    <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/logout" element={<Logout />} />
@@ -46,17 +48,11 @@ const App = () => {
                     <Route path="/products/:id" element={<ProductDetails />} />
                     <Route path="/add-product" element={<AddProduct />} />
                     <Route path="/discounted-products" element={<DiscountedProducts />} />
-                    <Route
-                        path="/update-product/:id"
-                        element={<UpdateProduct />}
-                    />
-                    <Route
-                        path="/delete-product/:id"
-                        element={<DeleteProduct />}
-                    />{' '}
-                  {/* SHOPPING CART */}
-                  <Route path="/cart" element={<Cart />} />
-          
+                    <Route path="/update-product/:id" element={<UpdateProduct />} />
+                    <Route path="/delete-product/:id" element={<DeleteProduct />} />
+                    {/* SHOPPING CART */}
+                    {/* Passa la funzione per aggiornare il conteggio */}
+                    <Route path="/cart" element={<Cart setCartItemCount={setCartItemCount} />} />
                 </Routes>
             </div>
         </Router>
@@ -64,3 +60,4 @@ const App = () => {
 };
 
 export default App;
+

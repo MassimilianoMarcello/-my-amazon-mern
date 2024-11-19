@@ -1,45 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
-import { FiShoppingCart } from "react-icons/fi";
+import { FiShoppingCart } from 'react-icons/fi';
 import { CiSquarePlus, CiHome, CiUser, CiLogout } from 'react-icons/ci';
-import { AiOutlineProduct } from "react-icons/ai";
-import calculateItems from '../utils/calculateItems';
-
+import { AiOutlineProduct } from 'react-icons/ai';
 import './Navbar.css';
+import PropTypes from 'prop-types';
 
-const Navbar = () => {
+const Navbar = ({ cartItemCount }) => {
     const userId = sessionStorage.getItem('userId');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [item, setItem] = useState(0);
 
     useEffect(() => {
-        const getCartItems = async () => {
-            try {
-                const res = await axios.get(`http://localhost:5004/api/items/items/user/${userId}`, {
-                    withCredentials: true,
-                });
-                // console.log('Response data:', res.data);
-                // console.log('User ID:', userId);
-
-                if (res.status === 200) {
-                    // console.log('Cart items:', res.data);
-                    if (res.data.length > 0) {
-                        const totalItems = calculateItems(res.data);
-                        console.log('Total items:', totalItems);
-                        setItem(totalItems); 
-                    } else {
-                        setItem(0);
-                    }
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        };
-
-
-
         const checkAdmin = async () => {
             try {
                 const res = await axios.get(`http://localhost:5004/api/users/${userId}`, {
@@ -55,7 +28,6 @@ const Navbar = () => {
 
         if (userId) {
             setIsLoggedIn(true);
-            getCartItems();
             checkAdmin();
         }
     }, [userId]);
@@ -80,9 +52,9 @@ const Navbar = () => {
                         <li>
                             <NavLink to="/cart">
                                 <FiShoppingCart />
-                                <span> Cart {item}</span>
+                                <span> Cart {cartItemCount}</span>
                             </NavLink>
-                        </li> 
+                        </li>
                         <li>
                             <NavLink to="/logout"><CiLogout /> Logout</NavLink>
                         </li>
@@ -112,6 +84,11 @@ const Navbar = () => {
         </div>
     );
 };
+Navbar.propTypes = {
+    cartItemCount: PropTypes.number.isRequired,
+};
 
 export default Navbar;
+
+
 
