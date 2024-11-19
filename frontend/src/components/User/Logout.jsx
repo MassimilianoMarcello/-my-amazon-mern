@@ -12,6 +12,7 @@ const Logout = () => {
                 sessionStorage.removeItem('userId'); 
                 sessionStorage.removeItem('username');
                 navigate('/login'); 
+                window.location.reload();
             } catch (error) {
                 console.error('Error logging out:', error);
             }
