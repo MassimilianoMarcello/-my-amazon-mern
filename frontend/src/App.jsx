@@ -50,7 +50,7 @@ const App = () => {
         <Router>
             <div>
                 <Header />
-                <Navbar cartItemCount={cartItemCount} />
+                <Navbar cartItemCount={cartItemCount } />
                 <Routes>
                     {/* users */}
                     <Route path="/" element={<Home />} />
@@ -64,7 +64,7 @@ const App = () => {
                     {/* products */}
                     <Route path="/products" element={<ProductsList />} />
                     <Route path="/category/:category" element={<CategoryProducts />} />
-                    <Route path="/products/:id" element={<ProductDetails />} />
+                    <Route path="/products/:id" element={<ProductDetails setCartItemCount={setCartItemCount} />} /> {/* Passa setCartItemCount */}
                     <Route path="/add-product" element={<AddProduct />} />
                     <Route path="/discounted-products" element={<DiscountedProducts />} />
                     <Route path="/update-product/:id" element={<UpdateProduct />} />
@@ -78,5 +78,6 @@ const App = () => {
 };
 
 export default App;
+
 
 

@@ -46,17 +46,29 @@ const itemControllers = {
                 return res.status(400).json({ message: 'Invalid price or quantity' });
             }
     
-            const item = await Item.create({
-                quantity,
-                user_id,
-                price,
-                title
-            });
-            res.status(201).json(item);
+            // Verifica se l'articolo è già presente nel carrello
+            const existingItem = await Item.findOne({ user_id, title });
+    
+            if (existingItem) {
+                // Se il prodotto è già nel carrello, aggiorna la quantità
+                existingItem.quantity += quantity;
+                await existingItem.save();
+                return res.status(200).json(existingItem);
+            } else {
+                // Se il prodotto non è nel carrello, crealo
+                const item = await Item.create({
+                    quantity,
+                    user_id,
+                    price,
+                    title
+                });
+                res.status(201).json(item);
+            }
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
     },
+    
     
     updateItem: async (req, res) => {
         const { id } = req.params;

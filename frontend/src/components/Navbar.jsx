@@ -52,7 +52,7 @@ const Navbar = ({ cartItemCount }) => {
                         <li>
                             <NavLink to="/cart">
                                 <FiShoppingCart />
-                                <span> Cart {cartItemCount}</span>
+                                <span> Cart {cartItemCount || 0}</span>
                             </NavLink>
                         </li>
                         <li>

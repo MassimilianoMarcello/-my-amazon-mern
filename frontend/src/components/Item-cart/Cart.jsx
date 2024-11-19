@@ -41,23 +41,34 @@ const Cart = ({ setCartItemCount }) => {
 
     // Update quantity of an item
     const handleQuantityChange = async (itemId, newQuantity) => {
+        if (newQuantity < 1) return; // Prevenire quantità non valida
+    
         try {
             const response = await axios.put(
                 `http://localhost:5004/api/items/${itemId}`,
                 { quantity: newQuantity },
                 { withCredentials: true }
             );
-            const updatedItem = response.data.item;
-            const updatedItems = items.map(item => (item._id === itemId ? updatedItem : item));
-            setItems(updatedItems);
-
-            // Aggiorna il conteggio degli articoli
-            const totalItemCount = updatedItems.reduce((acc, item) => acc + item.quantity, 0);
-            setCartItemCount(totalItemCount);
+    
+            if (response.status === 200) {
+                const updatedItem = response.data.item;
+                // Aggiorna l'array items localmente
+                const updatedItems = items.map(item =>
+                    item._id === itemId ? updatedItem : item
+                );
+                setItems(updatedItems);
+    
+                // Ricalcola e aggiorna il conteggio degli articoli
+                const totalItemCount = updatedItems.reduce((acc, item) => acc + item.quantity, 0);
+                setCartItemCount(totalItemCount);
+            } else {
+                setError("Failed to update item quantity");
+            }
         } catch (error) {
             setError(error.message);
         }
     };
+    
 
     // Delete an item from the cart
     const handleDelete = async (itemId) => {

@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './ProductDetails.css';
+import PropTypes from 'prop-types';
 
-const ProductDetails = () => {
+const ProductDetails = ({ setCartItemCount }) => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [product, setProduct] = useState(null);
@@ -11,6 +12,14 @@ const ProductDetails = () => {
     const [error, setError] = useState(null);
     const [mainImage, setMainImage] = useState('');
     const [message, setMessage] = useState('');
+    const [quantity, setQuantity] = useState(1);
+
+    const handleQuantityChange = (e) => {
+        const newQuantity = Number(e.target.value);
+        if (newQuantity > 0) {
+            setQuantity(newQuantity);
+        }
+    };
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -27,33 +36,37 @@ const ProductDetails = () => {
 
         fetchProduct();
     }, [id]);
-        // Aggiungi al carrello
-        const handleAddToCart = async () => {
-            const userId = sessionStorage.getItem('userId');
-            if (!userId) {
-                setMessage("Please log in to add items to your cart.");
-                return;
+
+    const handleAddToCart = async () => {
+        const userId = sessionStorage.getItem('userId');
+        if (!userId) {
+            setMessage("Please log in to add items to your cart.");
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                'http://localhost:5004/api/items/add',
+                {
+                    title: product.title,
+                    price: product.price,
+                    quantity,
+                    user_id: userId,
+                },
+                { withCredentials: true }
+            );
+            if (response.status === 201) {
+                setMessage("Item added to cart successfully.");
+                
+                // Aggiorna il conteggio degli articoli nel carrello
+                const totalItemCount = response.data.totalItemCount; // Assicurati che il server risponda con il conteggio aggiornato
+                setCartItemCount(totalItemCount);
             }
-    
-            try {
-                const response = await axios.post(
-                    'http://localhost:5004/api/items/add',
-                    {
-                        title: product.title,
-                        price: product.price,
-                        quantity: 1,
-                        user_id: userId,
-                    },
-                    { withCredentials: true }
-                );
-                if (response.status === 201) {
-                    setMessage("Item added to cart successfully.");
-                }
-            // eslint-disable-next-line no-unused-vars
-            } catch (error) {
-                setMessage("Failed to add item to cart. Please try again.");
-            }
-        };
+        // eslint-disable-next-line no-unused-vars
+        } catch (error) {
+            setMessage("Failed to add item to cart. Please try again.");
+        }
+    };
 
     if (loading) {
         return <p>Loading...</p>;
@@ -87,8 +100,13 @@ const ProductDetails = () => {
             <div>
                 <img src={mainImage} alt={product.title} className="product-main-image" />
                 <div className="product-buttons">
-                <button className="add-to-cart-button" onClick={handleAddToCart}>Add to Cart</button>
-  
+                    <input
+                        type="number"
+                        value={quantity}
+                        min="1"
+                        onChange={handleQuantityChange}
+                    />
+                    <button className="add-to-cart-button" onClick={handleAddToCart}>Add to Cart</button>
                     <button className="edit-product-button" onClick={() => navigate(`/update-product/${id}`)}>Edit</button>
                     <button className="delete-product-button" onClick={() => navigate(`/delete-product/${id}`)}>Delete</button>
                 </div>
@@ -110,7 +128,9 @@ const ProductDetails = () => {
         </div>
     );
 };
+ProductDetails.propTypes = {
+    setCartItemCount: PropTypes.func.isRequired,
+};
+
 
 export default ProductDetails;
-
-
