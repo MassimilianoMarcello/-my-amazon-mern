@@ -15,7 +15,7 @@ const Cart = ({ setCartItemCount }) => {
                 const response = await axios.get(`http://localhost:5004/api/items/items/user/${userId}`, {
                     withCredentials: true,
                 });
-                if (Array.isArray(response.data)) {
+                if (response.status === 200 && response.data.length > 0) {
                     setItems(response.data);
                     updateCartItemCount(response.data); // Aggiorna il conteggio
                 } else {
