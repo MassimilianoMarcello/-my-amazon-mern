@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { useStripe, useElements } from '@stripe/react-stripe-js';
+import { CardElement } from '@stripe/react-stripe-js';
 
 const Cart = ({ setCartItemCount }) => {
     const userId = sessionStorage.getItem('userId');
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const stripe = useStripe();
+    const elements = useElements();
 
     // Fetch cart items
     useEffect(() => {
@@ -42,14 +46,14 @@ const Cart = ({ setCartItemCount }) => {
     // Update quantity of an item
     const handleQuantityChange = async (itemId, newQuantity) => {
         if (newQuantity < 1) return; // Prevenire quantità non valida
-    
+
         try {
             const response = await axios.put(
                 `http://localhost:5004/api/items/${itemId}`,
                 { quantity: newQuantity },
                 { withCredentials: true }
             );
-    
+
             if (response.status === 200) {
                 const updatedItem = response.data.item;
                 // Aggiorna l'array items localmente
@@ -57,7 +61,7 @@ const Cart = ({ setCartItemCount }) => {
                     item._id === itemId ? updatedItem : item
                 );
                 setItems(updatedItems);
-    
+
                 // Ricalcola e aggiorna il conteggio degli articoli
                 const totalItemCount = updatedItems.reduce((acc, item) => acc + item.quantity, 0);
                 setCartItemCount(totalItemCount);
@@ -71,22 +75,58 @@ const Cart = ({ setCartItemCount }) => {
 
     // Delete an item from the cart
     const handleDelete = async (itemId) => {
-        try {
-            await axios.delete(`http://localhost:5004/api/items/${itemId}`, {
-                withCredentials: true,
-            });
-            const updatedItems = items.filter(item => item._id !== itemId);
-            setItems(updatedItems);
+        if (window.confirm("Are you sure you want to remove this item from your cart?")) {
+            try {
+                await axios.delete(`http://localhost:5004/api/items/${itemId}`, {
+                    withCredentials: true,
+                });
+                const updatedItems = items.filter(item => item._id !== itemId);
+                setItems(updatedItems);
 
-            // Aggiorna il conteggio degli articoli
-            const totalItemCount = updatedItems.reduce((acc, item) => acc + item.quantity, 0);
-            setCartItemCount(totalItemCount);
-        } catch (error) {
-            setError(error.message);
+                // Aggiorna il conteggio degli articoli
+                const totalItemCount = updatedItems.reduce((acc, item) => acc + item.quantity, 0);
+                setCartItemCount(totalItemCount);
+            } catch (error) {
+                setError(error.message);
+            }
         }
     };
 
-    // Calculate the total price of the cart
+    // Checkout
+    const handleCheckout = async () => {
+        try {
+            // Calcola il totale del carrello
+            const totalPrice = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+            // Chiedi al backend di creare un pagamento e ottenere il client_secret
+            const response = await axios.post('http://localhost:5004/api/payments', {
+                amount: totalPrice,
+            }, { withCredentials: true });
+
+            const clientSecret = response.data.client_secret;
+
+            // Usa il client_secret per iniziare il pagamento con Stripe
+            const cardElement = elements.getElement(CardElement);
+            const { error } = await stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: cardElement,
+                },
+            });
+
+            if (error) {
+                setError(`Payment failed: ${error.message}`);
+            } else {
+                alert("Payment successful!");
+                setItems([]); // Resetta il carrello
+                setCartItemCount(0); // Resetta il conteggio degli articoli nel carrello
+            }
+        // eslint-disable-next-line no-unused-vars
+        } catch (error) {
+            setError("Payment initiation failed");
+        }
+    };
+
+    // Calcola il totale del carrello
     const totalPrice = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
     if (loading) {
@@ -142,6 +182,8 @@ const Cart = ({ setCartItemCount }) => {
                     </tfoot>
                 </table>
             )}
+            <CardElement />
+            <button onClick={handleCheckout} disabled={items.length === 0}>Checkout</button>
         </div>
     );
 };
@@ -151,6 +193,7 @@ Cart.propTypes = {
 };
 
 export default Cart;
+
 
 
 

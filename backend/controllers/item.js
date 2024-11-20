@@ -3,26 +3,26 @@ import Item from '../models/item.js';
 import Product from '../models/product.js';
 
 const itemControllers = {
-    getAllItems: async (req, res) => {
-        try {
-            const items = await Item.find();
-            res.status(200).json(items);
-        } catch (error) {
-            return res.status(500).json({ message: error.message });
-        }
-    },
-    getItem: async (req, res) => {
-        const { id } = req.params;
-        try {
-            const item = await Item.findById(id);
-            if (!item) {
-                return res.status(404).json({ message: 'Item not found' });
-            }
-            res.json(item);
-        } catch (error) {
-            return res.status(500).json({ message: error.message });
-        }
-    },
+    // getAllItems: async (req, res) => {
+    //     try {
+    //         const items = await Item.find();
+    //         res.status(200).json(items);
+    //     } catch (error) {
+    //         return res.status(500).json({ message: error.message });
+    //     }
+    // },
+    // getItem: async (req, res) => {
+    //     const { id } = req.params;
+    //     try {
+    //         const item = await Item.findById(id);
+    //         if (!item) {
+    //             return res.status(404).json({ message: 'Item not found' });
+    //         }
+    //         res.json(item);
+    //     } catch (error) {
+    //         return res.status(500).json({ message: error.message });
+    //     }
+    // },
     getItemsByUser: async (req, res) => {
         const { id } = req.params;
            console.log("User ID ricevuto:", id);

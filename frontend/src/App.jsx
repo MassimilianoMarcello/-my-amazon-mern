@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
 import axios from 'axios';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 
 // Altri import per le pagine dell'app
 import UsersListPage from './components/User/UsersListPage';
@@ -20,6 +22,8 @@ import CategoryProducts from './components/Product/CategoryProducts';
 import DiscountedProducts from './components/HomePage/DiscountedProducts';
 import Home from './Home';
 import Cart from './components/Item-cart/Cart';
+const stripePromise = loadStripe('pk_test_51QMV0AJtWSbtcfAuJvEWpAwPyyLfRs6sNc4dgqfmQYcaIcOIqCEvRfl7ZpvCWWNKBH36DZzD5ilnoJm3TJZnWXYf00usrJmGs6');
+
 
 const App = () => {
     const [cartItemCount, setCartItemCount] = useState(0);
@@ -70,8 +74,15 @@ const App = () => {
                     <Route path="/update-product/:id" element={<UpdateProduct />} />
                     <Route path="/delete-product/:id" element={<DeleteProduct />} />
                     {/* SHOPPING CART */}
-                    <Route path="/cart" element={<Cart setCartItemCount={setCartItemCount} />} />
-                </Routes>
+                    <Route
+          path="/cart"
+          element={
+            <Elements stripe={stripePromise}>
+              <Cart setCartItemCount={setCartItemCount} />
+            </Elements>
+          }
+        />
+                                    </Routes>
             </div>
         </Router>
     );
