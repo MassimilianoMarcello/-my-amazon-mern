@@ -95,36 +95,58 @@ const Cart = ({ setCartItemCount }) => {
     // Checkout
     const handleCheckout = async () => {
         try {
-            // Calcola il totale del carrello
+            // Calculate the total price of the cart by summing up the price * quantity of each item
             const totalPrice = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
-            // Chiedi al backend di creare un pagamento e ottenere il client_secret
+    
+            // Send a request to the backend to create a payment and get the client_secret for Stripe
             const response = await axios.post('http://localhost:5004/api/payments', {
-                amount: totalPrice,
-            }, { withCredentials: true });
-
+                amount: totalPrice,  // Pass the total amount to the backend
+            }, { withCredentials: true });  // Include credentials for session management
+    
+            // Extract the client_secret received from the backend response
             const clientSecret = response.data.client_secret;
-
-            // Usa il client_secret per iniziare il pagamento con Stripe
-            const cardElement = elements.getElement(CardElement);
-            const { error } = await stripe.confirmCardPayment(clientSecret, {
+    
+            // Use the client_secret to complete the payment process with Stripe
+            const cardElement = elements.getElement(CardElement);  // Get the card element from Stripe
+            const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
                 payment_method: {
-                    card: cardElement,
+                    card: cardElement,  // The card element for Stripe to process the payment
                 },
             });
-
+    
+            // Handle payment error if there's an issue with Stripe
             if (error) {
-                setError(`Payment failed: ${error.message}`);
-            } else {
-                alert("Payment successful!");
-                setItems([]); // Resetta il carrello
-                setCartItemCount(0); // Resetta il conteggio degli articoli nel carrello
+                console.error("Stripe Error:", error);  // Log the error for debugging
+                setError(`Payment failed: ${error.message}`);  // Display the error message to the user
+                return;
             }
-        // eslint-disable-next-line no-unused-vars
+    
+            // If the payment is successful, confirm the success and proceed to clear the cart
+            if (paymentIntent && paymentIntent.status === "succeeded") {
+                alert("Payment successful!");  // Notify the user of the successful payment
+    
+                // Attempt to empty the cart by sending a request to the backend
+                try {
+                    await axios.delete(`http://localhost:5004/api/items/items/clearCart/${userId}`, {
+                        withCredentials: true,  // Ensure credentials are sent for user validation
+                    });
+    
+                    // Clear the cart items in the local state
+                    setItems([]);
+                    setCartItemCount(0);  // Reset the cart item count
+                } catch (cartError) {
+                    console.error("Error clearing the cart:", cartError);  // Log the error for debugging
+                    setError("Payment was successful, but the cart was not cleared.");  // Notify the user if cart clearance fails
+                }
+            } else {
+                setError("Payment was not completed.");  // Handle the case where payment didn't succeed
+            }
         } catch (error) {
-            setError("Payment initiation failed");
+            console.error("Error during checkout:", error);  // Log any other errors during the checkout process
+            setError("An error occurred during the payment process.");  // Display a generic error message to the user
         }
     };
+    
 
     // Calcola il totale del carrello
     const totalPrice = items.reduce((acc, item) => acc + item.price * item.quantity, 0);

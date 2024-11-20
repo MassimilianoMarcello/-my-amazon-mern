@@ -23,9 +23,11 @@ const itemControllers = {
     //         return res.status(500).json({ message: error.message });
     //     }
     // },
+
+    // Get all items in the shopping cart for a specific user
     getItemsByUser: async (req, res) => {
         const { id } = req.params;
-           console.log("User ID ricevuto:", id);
+           console.log("User ID receved:", id);
         try {
             console.log(`Fetching items for user_id: ${id}`);
             const items = await Item.find({ user_id: id });
@@ -35,6 +37,7 @@ const itemControllers = {
             return res.status(500).json({ message: error.message });
         }
     },
+    // Add an item to the shopping cart
     addItem: async (req, res) => {
         const { quantity, user_id, price, title } = req.body;
     
@@ -93,7 +96,7 @@ const itemControllers = {
         }
     },
     
-    
+    // update the quantity of an item in the shopping cart 
     
     updateItem: async (req, res) => {
         const { id } = req.params;
@@ -116,7 +119,7 @@ const itemControllers = {
         }
     },
     
-    
+    // delete an item from the shopping cart
     deleteItem: async (req, res) => {
         const { id } = req.params;
         try {
@@ -130,7 +133,28 @@ const itemControllers = {
             console.error(error);
             return res.status(500).json({ message: error.message });
         }
+    },
+    // clean the shoppin cart after payment
+    clearCartByUser: async (req, res) => {
+        console.log("Clearing cart for user ID:", req.params.id);
+        const { id } = req.params;
+        try {
+            const result = await Item.deleteMany({ user_id: id });
+            console.log("Items deleted:", result.deletedCount);
+    
+            if (result.deletedCount > 0) {
+                res.status(200).json({ message: 'Cart successfully cleared' });
+            } else {
+                res.status(404).json({ message: 'No items found in the cart' });
+            }
+        } catch (error) {
+            console.error("Error clearing cart:", error);
+            res.status(500).json({ message: 'Error clearing the cart', error: error.message });
+        }
     }
+    
 };
+
+
 
 export default itemControllers;

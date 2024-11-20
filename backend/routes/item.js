@@ -3,7 +3,7 @@ import itemControllers from '../controllers/item.js';
 import verifyToken from '../middleware/verifyToken.js';
 
 
-const { getAllItems, getItem, addItem, updateItem, deleteItem ,getItemsByUser} = itemControllers;
+const { getAllItems, getItem, addItem, updateItem, deleteItem ,getItemsByUser, clearCartByUser} = itemControllers;
 
 const router = express.Router();
 
@@ -23,5 +23,7 @@ router.put('/items/:id',verifyToken, updateItem);
 
 // user delete item from cart
 router.delete('/items/:id', verifyToken, deleteItem);
+
+router.delete('/items/items/clearCart/:id',clearCartByUser);
 
 export default router;
