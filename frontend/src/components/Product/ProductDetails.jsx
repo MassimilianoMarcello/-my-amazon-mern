@@ -58,34 +58,43 @@ const ProductDetails = ({ setCartItemCount }) => {
         fetchProduct();
     }, [id]);
 
-    // add the product to the cart
+    // add item:add the product to the cart
     const handleAddToCart = async () => {
         if (!userId) {
             setMessage("Please log in to add items to your cart.");
             return;
         }
-
+    
         try {
             const response = await axios.post(
                 'http://localhost:5004/api/items/add',
-                { title: product.title, price: product.price, quantity, user_id: userId },
+                {
+                    product_id: id, // Use the ID product
+                    price: product.price,
+                    quantity,
+                    user_id: userId
+                },
                 { withCredentials: true }
             );
-
+    
             if (response.status === 201 || response.status === 200) {
-                setMessage(`Item added to cart successfully. Quantity added: ${response.data.addedQuantity}`);
+                setMessage(`Item added to cart successfully. Quantity added: ${response.data.item.quantity}`);
                 
-                const cartResponse = await axios.get(`http://localhost:5004/api/items/items/user/${userId}`, { withCredentials: true });
+                const cartResponse = await axios.get(
+                    `http://localhost:5004/api/items/items/user/${userId}`, 
+                    { withCredentials: true }
+                );
                 const totalItemCount = cartResponse.data.reduce((acc, item) => acc + item.quantity, 0);
-                
                 setCartItemCount(totalItemCount);
                 setQuantity(1);
             }
-        // eslint-disable-next-line no-unused-vars
         } catch (error) {
+            console.error(error.response?.data || error.message);
             setMessage("Failed to add item to cart. Please try again.");
         }
     };
+    
+    
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;

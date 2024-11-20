@@ -81,6 +81,7 @@ const App = () => {
           element={
             <Elements stripe={stripePromise}>
               <Cart setCartItemCount={setCartItemCount} />
+         
             </Elements>
           }
         />

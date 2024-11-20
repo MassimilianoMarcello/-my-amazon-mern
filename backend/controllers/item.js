@@ -1,4 +1,4 @@
-
+import mongoose from 'mongoose';
 import Item from '../models/item.js';
 import Product from '../models/product.js';
 
@@ -39,62 +39,56 @@ const itemControllers = {
     },
     // Add an item to the shopping cart
     addItem: async (req, res) => {
-        const { quantity, user_id, price, title } = req.body;
+        const { product_id, user_id, price, quantity } = req.body;
     
         try {
-            if (!title || !price || !quantity || !user_id) {
-                return res.status(400).json({ message: 'All fields are required' });
-            }
-            if (typeof price !== 'number' || typeof quantity !== 'number' || quantity < 1) {
-                return res.status(400).json({ message: 'Invalid price or quantity' });
+            if (!product_id || !user_id || !price || !quantity) {
+                return res.status(400).json({ message: 'Missing required fields' });
             }
     
-            // Verifify if the product exists  in the database shopping cart
-            const existingItem = await Item.findOne({ user_id, title });
+            // Verifica che il product_id sia valido
+            if (!mongoose.Types.ObjectId.isValid(product_id)) {
+                return res.status(400).json({ message: 'Invalid product ID' });
+            }
+    
+            // Recupera il prodotto per ottenere il titolo
+            const product = await Product.findById(product_id);
+            if (!product) {
+                return res.status(404).json({ message: 'Product not found' });
+            }
+    
+            // Controlla se l'item è già presente nel carrello
+            const existingItem = await Item.findOne({ user_id, product_id });
     
             if (existingItem) {
-                // if the product is already in the database update the quantity
                 existingItem.quantity += quantity;
                 await existingItem.save();
-    
-                // Get the total count of items in the user's cart
-                const totalItemCount = await Item.aggregate([
-                    { $match: { user_id } },
-                    { $group: { _id: null, totalQuantity: { $sum: '$quantity' } } }
-                ]);
-    
                 return res.status(200).json({
                     message: `Item updated in cart. Quantity added: ${quantity}`,
-                    totalItemCount: totalItemCount[0]?.totalQuantity || 0,
-                    addedQuantity: quantity,
                     item: existingItem
                 });
-            } else {
-                // if the product is not in the database create a new item
-                const item = await Item.create({
-                    quantity,
-                    user_id,
-                    price,
-                    title
-                });
-    
-                // Get the total count of items in the user's cart
-                const totalItemCount = await Item.aggregate([
-                    { $match: { user_id } },
-                    { $group: { _id: null, totalQuantity: { $sum: '$quantity' } } }
-                ]);
-    
-                return res.status(201).json({
-                    message: `Item added to cart. Quantity added: ${quantity}`,
-                    totalItemCount: totalItemCount[0]?.totalQuantity || 0,
-                    addedQuantity: quantity,
-                    item
-                });
             }
+    
+            // Crea un nuovo item nel carrello includendo il titolo
+            const item = await Item.create({
+                product_id,
+                user_id,
+                title: product.title, // Aggiungi il titolo del prodotto
+                price,
+                quantity
+            });
+    
+            return res.status(201).json({
+                message: 'Item added to cart',
+                item
+            });
         } catch (error) {
-            return res.status(500).json({ message: error.message });
+            console.error("Error during addItem:", error);
+            return res.status(500).json({ message: 'Internal Server Error' });
         }
     },
+    
+    
     
     // update the quantity of an item in the shopping cart 
     
