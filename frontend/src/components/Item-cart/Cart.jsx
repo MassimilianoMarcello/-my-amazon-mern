@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
 import { CardElement } from '@stripe/react-stripe-js';
 
@@ -11,6 +12,7 @@ const Cart = ({ setCartItemCount }) => {
     const [error, setError] = useState(null);
     const stripe = useStripe();
     const elements = useElements();
+    const navigate = useNavigate();
 
     // Fetch cart items
     useEffect(() => {
@@ -95,57 +97,60 @@ const Cart = ({ setCartItemCount }) => {
     // Checkout
     const handleCheckout = async () => {
         try {
-            // Calculate the total price of the cart by summing up the price * quantity of each item
+            // Calcola il totale del carrello
             const totalPrice = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
     
-            // Send a request to the backend to create a payment and get the client_secret for Stripe
+            // Chiedi al backend di creare un pagamento e ottenere il client_secret
             const response = await axios.post('http://localhost:5004/api/payments', {
-                amount: totalPrice,  // Pass the total amount to the backend
-            }, { withCredentials: true });  // Include credentials for session management
+                amount: totalPrice,
+            }, { withCredentials: true });
     
-            // Extract the client_secret received from the backend response
             const clientSecret = response.data.client_secret;
     
-            // Use the client_secret to complete the payment process with Stripe
-            const cardElement = elements.getElement(CardElement);  // Get the card element from Stripe
+            // Completa il pagamento con Stripe
+            const cardElement = elements.getElement(CardElement);
             const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
                 payment_method: {
-                    card: cardElement,  // The card element for Stripe to process the payment
+                    card: cardElement,
                 },
             });
     
-            // Handle payment error if there's an issue with Stripe
+            // Gestione dell'errore di pagamento
             if (error) {
-                console.error("Stripe Error:", error);  // Log the error for debugging
-                setError(`Payment failed: ${error.message}`);  // Display the error message to the user
+                console.error("Stripe Error:", error);
+                setError(`Payment failed: ${error.message}`);
                 return;
             }
     
-            // If the payment is successful, confirm the success and proceed to clear the cart
+            // Conferma che il pagamento è riuscito
             if (paymentIntent && paymentIntent.status === "succeeded") {
-                alert("Payment successful!");  // Notify the user of the successful payment
+                alert("Payment successful!");
     
-                // Attempt to empty the cart by sending a request to the backend
+                // Naviga verso la pagina di successo, passando i dati
+                navigate('/success', { state: { items, totalPrice } });
+    
+                // Svuota il carrello nel backend (solo dopo che il pagamento è stato completato)
                 try {
                     await axios.delete(`http://localhost:5004/api/items/items/clearCart/${userId}`, {
-                        withCredentials: true,  // Ensure credentials are sent for user validation
+                        withCredentials: true,
                     });
     
-                    // Clear the cart items in the local state
+                    // Aggiorna lo stato locale
                     setItems([]);
-                    setCartItemCount(0);  // Reset the cart item count
+                    setCartItemCount(0);
                 } catch (cartError) {
-                    console.error("Error clearing the cart:", cartError);  // Log the error for debugging
-                    setError("Payment was successful, but the cart was not cleared.");  // Notify the user if cart clearance fails
+                    console.error("Error clearing the cart:", cartError);
+                    setError("Payment succeeded, but the cart was not cleared.");
                 }
             } else {
-                setError("Payment was not completed.");  // Handle the case where payment didn't succeed
+                setError("Payment was not completed.");
             }
         } catch (error) {
-            console.error("Error during checkout:", error);  // Log any other errors during the checkout process
-            setError("An error occurred during the payment process.");  // Display a generic error message to the user
+            console.error("Error during checkout:", error);
+            setError("Error in payment process.");
         }
     };
+    
     
 
     // Calcola il totale del carrello

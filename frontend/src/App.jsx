@@ -22,6 +22,7 @@ import CategoryProducts from './components/Product/CategoryProducts';
 import DiscountedProducts from './components/HomePage/DiscountedProducts';
 import Home from './Home';
 import Cart from './components/Item-cart/Cart';
+import SuccessPage from './components/Item-cart/SuccessPage';
 const stripePromise = loadStripe('pk_test_51QMV0AJtWSbtcfAuJvEWpAwPyyLfRs6sNc4dgqfmQYcaIcOIqCEvRfl7ZpvCWWNKBH36DZzD5ilnoJm3TJZnWXYf00usrJmGs6');
 
 
@@ -74,6 +75,7 @@ const App = () => {
                     <Route path="/update-product/:id" element={<UpdateProduct />} />
                     <Route path="/delete-product/:id" element={<DeleteProduct />} />
                     {/* SHOPPING CART */}
+                    <Route path="/success" element={<SuccessPage />} />
                     <Route
           path="/cart"
           element={
