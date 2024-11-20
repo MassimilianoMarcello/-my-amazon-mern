@@ -1,0 +1,134 @@
+/* Generale */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Contenitore principale del carrello */
+.cartpage {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+/* Messaggio di errore o loading */
+p {
+    text-align: center;
+    color: #f44336; /* rosso per gli errori */
+    font-weight: bold;
+}
+
+/* Tabella del carrello */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+td {
+    background-color: #fff;
+}
+
+tfoot td {
+    font-weight: bold;
+}
+
+tfoot tr {
+    background-color: #f9f9f9;
+}
+
+/* Stile per i bottoni */
+button {
+    background-color: #4CAF50; /* verde */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Input per la quantità */
+input[type="number"] {
+    width: 50px;
+    padding: 5px;
+    font-size: 16px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+input[type="number"]:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* Stile per il componente `CartItem` */
+tr {
+    background-color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Stile per il componente `CartSummary` */
+div > table {
+    margin-top: 20px;
+    text-align: right;
+}
+
+div > table tfoot td {
+    font-size: 18px;
+}
+
+div > table tfoot tr {
+    background-color: #f9f9f9;
+}
+
+/* CardElement Stripe */
+.StripeElement {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+/* Stile per i componenti vuoti */
+.empty-cart {
+    text-align: center;
+    font-size: 18px;
+    color: #999;
+}
