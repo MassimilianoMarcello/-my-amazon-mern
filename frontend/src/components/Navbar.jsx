@@ -9,6 +9,7 @@ import './Navbar.css';
 import PropTypes from 'prop-types';
 
 const Navbar = ({ cartItemCount }) => {
+    console.log("Cart Item Count in Navbar:", cartItemCount);
     const userId = sessionStorage.getItem('userId');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);

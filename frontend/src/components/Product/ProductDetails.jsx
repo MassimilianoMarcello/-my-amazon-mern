@@ -70,8 +70,8 @@ const ProductDetails = ({ setCartItemCount }) => {
             const response = await axios.post(
                 'http://localhost:5004/api/items/add',
                 {
-                    product_id: id,  // Usa l'id del prodotto ottenuto da useParams
-                    price: product.price,  // Prezzo dinamico
+                    product_id: id,
+                    price: product.price,
                     quantity,
                     user_id: userId
                 },
@@ -79,26 +79,34 @@ const ProductDetails = ({ setCartItemCount }) => {
             );
     
             if (response.status === 201 || response.status === 200) {
-                setMessage('Item added to cart!');  // Imposta il messaggio
-    
+                setMessage('Item added to cart!');
+                
                 // Ricalcola il numero degli articoli nel carrello
                 const cartResponse = await axios.get(`http://localhost:5004/api/items/items/user/${userId}`, {
                     withCredentials: true,
                 });
-                const totalItemCount = cartResponse.data.reduce((acc, item) => acc + item.quantity, 0);
-                setCartItemCount(totalItemCount); // Aggiorna il contatore nel componente principale
-                setQuantity(1); // Reset della quantità
     
-                // Reset del messaggio dopo 3 secondi (opzionale)
+                // Verifica la risposta e il totale degli articoli
+                console.log('Cart response:', cartResponse.data);
+    
+                const totalItemCount = cartResponse.data.reduce((acc, item) => acc + item.quantity, 0);
+                console.log('Total items count:', totalItemCount);  // Verifica il totale
+    
+                setCartItemCount(totalItemCount); // Aggiorna il contatore nel componente principale
+                setQuantity(1);
                 setTimeout(() => {
                     setMessage('');
                 }, 3000);
             }
         } catch (error) {
             console.error('Error adding to cart:', error);
-            setMessage('Failed to add item to cart.');  // Mostra un errore in caso di fallimento
+            setMessage('Failed to add item to cart.');
         }
     };
+    
+    
+    
+    
     
     
     
