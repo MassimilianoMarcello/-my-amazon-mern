@@ -29,26 +29,26 @@ const stripePromise = loadStripe('pk_test_51QMV0AJtWSbtcfAuJvEWpAwPyyLfRs6sNc4dg
 const App = () => {
     const [cartItemCount, setCartItemCount] = useState(0);
 
-    //fetch cart items count on page load
-    useEffect(() => {
-        const fetchCartItemCount = async () => {
-            const userId = sessionStorage.getItem('userId');
-            if (userId) {
-                try {
-                    const response = await axios.get(`http://localhost:5004/api/items/items/user/${userId}`, {
-                        withCredentials: true,
-                    });
-                    if (Array.isArray(response.data)) {
-                        const totalItemCount = response.data.reduce((acc, item) => acc + item.quantity, 0);
-                        setCartItemCount(totalItemCount);
-                    }
-                } catch (error) {
-                    console.error('Errore nel recupero degli articoli del carrello:', error);
+    // Funzione per aggiornare il numero di articoli nel carrello
+    const updateCartItemCount = async () => {
+        const userId = sessionStorage.getItem('userId');
+        if (userId) {
+            try {
+                const response = await axios.get(`http://localhost:5004/api/items/items/user/${userId}`, {
+                    withCredentials: true,
+                });
+                if (Array.isArray(response.data)) {
+                    const totalItemCount = response.data.reduce((acc, item) => acc + item.quantity, 0);
+                    setCartItemCount(totalItemCount);
                 }
+            } catch (error) {
+                console.error('Errore nel recupero degli articoli del carrello:', error);
             }
-        };
+        }
+    };
 
-        fetchCartItemCount();
+    useEffect(() => {
+        updateCartItemCount();
     }, []);
 
     return (

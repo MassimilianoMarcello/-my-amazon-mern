@@ -17,6 +17,7 @@ const ProductDetails = ({ setCartItemCount }) => {
     const [quantity, setQuantity] = useState(1);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
+    // const productId = 'product-id';
 
     const handleQuantityChange = (e) => {
         const newQuantity = Number(e.target.value);
@@ -61,7 +62,7 @@ const ProductDetails = ({ setCartItemCount }) => {
     // add item:add the product to the cart
     const handleAddToCart = async () => {
         if (!userId) {
-            setMessage("Please log in to add items to your cart.");
+            alert("Please log in to add items to your cart.");
             return;
         }
     
@@ -69,8 +70,8 @@ const ProductDetails = ({ setCartItemCount }) => {
             const response = await axios.post(
                 'http://localhost:5004/api/items/add',
                 {
-                    product_id: id, // Use the ID product
-                    price: product.price,
+                    product_id: id,  // Usa l'id del prodotto ottenuto da useParams
+                    price: product.price,  // Prezzo dinamico
                     quantity,
                     user_id: userId
                 },
@@ -78,21 +79,28 @@ const ProductDetails = ({ setCartItemCount }) => {
             );
     
             if (response.status === 201 || response.status === 200) {
-                setMessage(`Item added to cart successfully. Quantity added: ${response.data.item.quantity}`);
-                
-                const cartResponse = await axios.get(
-                    `http://localhost:5004/api/items/items/user/${userId}`, 
-                    { withCredentials: true }
-                );
+                setMessage('Item added to cart!');  // Imposta il messaggio
+    
+                // Ricalcola il numero degli articoli nel carrello
+                const cartResponse = await axios.get(`http://localhost:5004/api/items/items/user/${userId}`, {
+                    withCredentials: true,
+                });
                 const totalItemCount = cartResponse.data.reduce((acc, item) => acc + item.quantity, 0);
-                setCartItemCount(totalItemCount);
-                setQuantity(1);
+                setCartItemCount(totalItemCount); // Aggiorna il contatore nel componente principale
+                setQuantity(1); // Reset della quantità
+    
+                // Reset del messaggio dopo 3 secondi (opzionale)
+                setTimeout(() => {
+                    setMessage('');
+                }, 3000);
             }
         } catch (error) {
-            console.error(error.response?.data || error.message);
-            setMessage("Failed to add item to cart. Please try again.");
+            console.error('Error adding to cart:', error);
+            setMessage('Failed to add item to cart.');  // Mostra un errore in caso di fallimento
         }
     };
+    
+    
     
     
 
