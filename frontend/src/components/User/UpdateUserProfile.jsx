@@ -15,7 +15,7 @@ const UpdateUserProfile = () => {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await axios.get(`http://localhost:5004/api/users/${id}`);
+                const response = await axios.get(`http://localhost:5004/api/users/${id}  ` , {  withCredentials: true, });
                 const user = response.data;
                 setFirstName(user.firstName);
                 setLastName(user.lastName);
@@ -35,7 +35,7 @@ const UpdateUserProfile = () => {
                 firstName,
                 lastName,
                 address
-            });
+            }   , {  withCredentials: true, });
             setSuccess('Profile updated successfully');
             setError('');
             navigate(`/profile/${id}`);

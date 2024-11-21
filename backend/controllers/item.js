@@ -46,9 +46,9 @@ const itemControllers = {
                 return res.status(400).json({ message: 'Missing required fields' });
             }
     
-            if (!mongoose.Types.ObjectId.isValid(product_id)) {
-                return res.status(400).json({ message: 'Invalid product ID' });
-            }
+            // if (!mongoose.Types.ObjectId.isValid(product_id)) {
+            //     return res.status(400).json({ message: 'Invalid product ID' });
+            // }
     
             const product = await Product.findById(product_id);
             if (!product) {
@@ -74,16 +74,12 @@ const itemControllers = {
                 });
             }
     
-            // Calcola il totale degli articoli nel carrello
-            const totalItemCount = await Item.aggregate([
-                { $match: { user_id: user_id } },
-                { $group: { _id: null, total: { $sum: '$quantity' } } }
-            ]);
+     
     
             return res.status(201).json({
                 message: 'Item added to cart',
                 item,
-                totalItemCount: totalItemCount[0]?.total || 0 // Restituisci il totale
+       
             });
         } catch (error) {
             console.error("Error during addItem:", error);
