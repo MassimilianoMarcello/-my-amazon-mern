@@ -6,6 +6,9 @@ import validatePassword from '../utils/validatePassword.js';
 import validateUsername from '../utils/validateUsername.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import nodemailer from "nodemailer";
+import dotenv from 'dotenv';
+
 
 const userControllers = {
     // Get all users
@@ -150,7 +153,95 @@ const userControllers = {
     logout: async (req, res) => {
         res.clearCookie('token');
         res.json({ message: 'Logout successful' });
+    },
+    // recovering password
+
+  forgotPassword : async (req, res) => {
+      const { email } = req.body;
+    
+      try {
+        // Controlla se l'utente esiste
+        const user = await User.findOne({ email });
+        if (!user) {
+          return res.status(404).json({ message: "No user associated with this email" });
+        }
+    
+        // Genera il token JWT
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
+          expiresIn: "10m",
+        });
+    
+        // Configura il trasportatore di Nodemailer
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: process.env.EMAIL,
+            pass: process.env.PASSWORD_APP_EMAIL, // Usa la password per app
+          },
+        });
+    
+        // Configura l'email
+        const mailOptions = {
+          from: process.env.EMAIL,
+          to: email,
+          subject: "Reset Password",
+          html: `
+            <h1>Reset Your Password</h1>
+            <p>Click on the link below to reset your password:</p>
+            <a href="${process.env.CORS_ORIGIN}/reset-password/${token}">
+              Reset Password
+            </a>
+            <p>This link will expire in 10 minutes.</p>
+            <p>If you didn't request this, please ignore this email.</p>
+          `,
+        };
+    
+        // Invia l'email
+        await transporter.sendMail(mailOptions);
+    
+        // Rispondi al client
+        res.status(200).json({ message: "Password reset email sent successfully" });
+      } catch (err) {
+        console.error("Error sending password reset email:", err);
+        res.status(500).json({ message: "Internal server error" });
+      }
+    },
+ // Assicurati di avere il modello User corretto
+    
+    // Resetting password
+    resetPassword : async (req, res) => {
+      try {
+        // Verifica il token
+        const decodedToken = jwt.verify(req.params.token, process.env.TOKEN_SECRET);
+
+    
+        // Trova l'utente nel DB
+        const user = await User.findById(decodedToken.userId);
+    
+        if (!user) {
+          return res.status(404).json({ message: "User not found" });
+        }
+    
+        // Cifra la nuova password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
+    
+        // Aggiorna la password dell'utente
+        user.password = hashedPassword;
+        await user.save();
+    
+        // Invia la risposta di successo
+        res.status(200).json({ message: "Password aggiornata con successo" });
+    
+      } catch (err) {
+        // Gestisce errori, come token non valido o altri
+        res.status(500).json({ message: "Errore nel recupero della password: " + err.message });
+      }
     }
+    
+ 
+
+    
 };
 
 export default userControllers;

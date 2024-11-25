@@ -4,7 +4,7 @@ import  checkUser  from '../middleware/checkUser.js';
 
 import userControllers from '../controllers/user.js';
 
-const { register, login, logout, getAllUsers, updateUserRole,getUserProfile,updateUserProfile } = userControllers;
+const { register, login, logout, getAllUsers, updateUserRole,getUserProfile,updateUserProfile,forgotPassword,resetPassword } = userControllers;
 
 const router = express.Router();
 
@@ -22,6 +22,11 @@ router.put("/users/:id/role",verifyToken, checkUser, updateUserRole);
 // SINGLE USER PROFILE
 router.get("/users/:id",verifyToken , getUserProfile);
 router.put("/users/:id",verifyToken, updateUserProfile);
+
+// recover password
+router.post('/forgotpassword', forgotPassword);
+router.post('/api/auth/reset-password/:token', resetPassword);
+
 
 
 

@@ -1,13 +1,35 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const SuccessPage = () => {
     const location = useLocation();
-    const { items, totalPrice } = location.state || {}; // Get data passed from checkout page
+
+    const navigate = useNavigate();
+    const { items, totalPrice, userId } = location.state || {}; // Assicurati che l'ID utente sia passato nella location state
+    const [userInfo, setUserInfo] = useState(null);
+
+    useEffect(() => {
+        if (userId) {
+            // Fai la richiesta per ottenere i dati dell'utente
+         axios.get(`/users/${userId}`, { withCredentials: true })
+                .then((response) => {
+                    setUserInfo(response.data);
+                })
+                .catch((error) => {
+                    console.error("Errore nel recupero dei dati utente:", error);
+                });
+        }
+    }, [userId]);
 
     return (
         <div>
             <h1>Payment Successful!</h1>
             <h2>Thank you for your purchase.</h2>
+
+            {userInfo && (
+                <h3>Your order will be shipped to {userInfo.firstName} {userInfo.lastName} at {userInfo.address} within 48 hours.</h3>
+            )}
 
             <h3>Your Order Summary</h3>
             {items && items.length > 0 ? (
@@ -41,7 +63,7 @@ const SuccessPage = () => {
                 <p>Your cart was empty.</p>
             )}
 
-            <button onClick={() => window.location.href = '/'}>Go back to Shopping</button>
+            <button onClick={() => navigate('/')}>Go back to Shopping</button>
         </div>
     );
 };
