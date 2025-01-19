@@ -4,6 +4,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 // import db connection
 import connectToDB from './config/db.js';
@@ -17,8 +18,6 @@ import itemRoutes from './routes/item.js';
 import productRoutes from './routes/product.js';
 import paymentRoutes from './routes/payment.js';
 
-
-
 // load environment variables
 dotenv.config();
 const PORT = process.env.PORT || 5003;
@@ -29,10 +28,14 @@ connectToDB();
 // initialize express
 const app = express();
 
+// Ottieni il percorso del file corrente
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // cors
 const allowedOrigins = process.env.CORS_ORIGINS
     ? process.env.CORS_ORIGINS.split(',')
-    : ['http://localhost:5173'];
+    : ['http://localhost:5173','https://my-amz-mern-backend.onrender.com/'];
 
 app.use(
     cors({
@@ -42,7 +45,11 @@ app.use(
 );
 
 // use helmet
-app.use(helmet());
+app.use(
+    helmet({
+        contentSecurityPolicy: false,
+    })
+);
 
 // parses
 app.use(express.json());
@@ -68,8 +75,6 @@ app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
 });
 
-
-
 // handle 404
 app.use('*', (req, res) => {
     res.status(404).json({ message: '404 - Not Found' });
@@ -85,3 +90,4 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
     console.log(`server is up and running on port :  http://localhost:${PORT}`);
 });
+
