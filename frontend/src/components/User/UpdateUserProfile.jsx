@@ -11,11 +11,14 @@ const UpdateUserProfile = () => {
     const [address, setAddress] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5004/api';
 
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await axios.get(`http://localhost:5004/api/users/${id}  ` , {  withCredentials: true, });
+                const response = await axios.get(`  ${apiUrl}/users/${id}  `, {
+                    withCredentials: true
+                });
                 const user = response.data;
                 setFirstName(user.firstName);
                 setLastName(user.lastName);
@@ -26,16 +29,20 @@ const UpdateUserProfile = () => {
         };
 
         fetchUserProfile();
-    }, [id]);
+    }, [id, apiUrl]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:5004/api/users/${id}`, {
-                firstName,
-                lastName,
-                address
-            }   , {  withCredentials: true, });
+            await axios.put(
+                `${apiUrl}/users/${id}`,
+                {
+                    firstName,
+                    lastName,
+                    address
+                },
+                { withCredentials: true }
+            );
             setSuccess('Profile updated successfully');
             setError('');
             navigate(`/profile/${id}`);
@@ -88,5 +95,3 @@ const UpdateUserProfile = () => {
 };
 
 export default UpdateUserProfile;
-
-

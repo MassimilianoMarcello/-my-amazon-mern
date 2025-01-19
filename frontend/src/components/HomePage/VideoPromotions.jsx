@@ -6,11 +6,12 @@ const VideoPromotions = () => {
     const [videos, setVideos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5004/api';
 
     useEffect(() => {
         const fetchVideos = async () => {
             try {
-                const response = await axios.get('http://localhost:5004/api/videos/promotions');
+                const response = await axios.get(`  ${apiUrl}/videos/promotions`);
                 setVideos(response.data);
             } catch (error) {
                 setError(error.message);
@@ -20,7 +21,7 @@ const VideoPromotions = () => {
         };
 
         fetchVideos();
-    }, []);
+    }, [apiUrl]);
 
     if (loading) {
         return <p>Loading...</p>;

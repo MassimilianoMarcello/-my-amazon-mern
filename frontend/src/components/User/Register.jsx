@@ -14,6 +14,8 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [rePassword, setRePassword] = useState('');
     const [error, setError] = useState('');
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5004/api';
+    
 
     const submitForm = async (e) => {
         e.preventDefault();
@@ -39,7 +41,7 @@ const Register = () => {
 
         try {
             const res = await axios.post(
-                'http://localhost:5004/api/register',
+                ` ${apiUrl}/register`,
                 {
                     username,
                     email,

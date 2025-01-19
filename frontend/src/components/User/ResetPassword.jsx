@@ -9,6 +9,8 @@ const ResetPassword = () => {
   const [success, setSuccess] = useState('');
   const { token } = useParams();  // Usa useParams per ottenere il token direttamente dalla URL
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5004/api';
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,7 +24,7 @@ const ResetPassword = () => {
     try {
       // Invia la nuova password al server con il token
       await axios.post(
-        `http://localhost:5004/api/auth/reset-password/${token}`,
+        `${apiUrl}/auth/reset-password/${token}`,
         { newPassword }
       );
       

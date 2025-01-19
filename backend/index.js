@@ -2,7 +2,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import helmet from 'helmet';
+
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -20,7 +20,8 @@ import paymentRoutes from './routes/payment.js';
 
 // load environment variables
 dotenv.config();
-const PORT = process.env.PORT || 5003;
+
+const PORT = process.env.PORT || 5004;
 
 // connect to database
 connectToDB();
@@ -35,7 +36,9 @@ const __dirname = path.dirname(__filename);
 // cors
 const allowedOrigins = process.env.CORS_ORIGINS
     ? process.env.CORS_ORIGINS.split(',')
-    : ['http://localhost:5173','https://my-amz-mern-backend.onrender.com/'];
+    : ['http://localhost:5173','https://my-amz-mern-backend.onrender.com'];
+
+    console.log('Allowed Origins:', allowedOrigins);
 
 app.use(
     cors({
@@ -44,12 +47,7 @@ app.use(
     })
 );
 
-// use helmet
-app.use(
-    helmet({
-        contentSecurityPolicy: false,
-    })
-);
+
 
 // parses
 app.use(express.json());

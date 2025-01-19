@@ -17,19 +17,18 @@ const ProductDetails = ({ setCartItemCount }) => {
     const [quantity, setQuantity] = useState(1);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
-    // const productId = 'product-id';
+
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5004/api';
 
     const handleQuantityChange = (e) => {
         const newQuantity = Number(e.target.value);
         if (newQuantity > 0) setQuantity(newQuantity);
     };
-// check if the user is logged in and if they are an admin
+
     useEffect(() => {
         const checkAdmin = async () => {
             try {
-                const res = await axios.get(`http://localhost:5004/api/users/${userId}`, {
-                    withCredentials: true,
-                });
+                const res = await axios.get(`${apiUrl}/users/${userId}`, { withCredentials: true });
                 if (res.status === 200 && res.data.role === 'admin') setIsAdmin(true);
             } catch (err) {
                 console.log(err);
@@ -40,13 +39,12 @@ const ProductDetails = ({ setCartItemCount }) => {
             setIsLoggedIn(true);
             checkAdmin();
         }
-    }, [userId]);
+    }, [userId, apiUrl]);
 
-    // fetch product details by id and set the main image to the first image in the images array of the product object  
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await axios.get(`http://localhost:5004/api/products/${id}`);
+                const response = await axios.get(`${apiUrl}/products/${id}`);
                 setProduct(response.data);
                 setMainImage(response.data.mainImage);
             } catch (error) {
@@ -57,18 +55,17 @@ const ProductDetails = ({ setCartItemCount }) => {
         };
 
         fetchProduct();
-    }, [id]);
+    }, [id, apiUrl]);
 
-    // add item:add the product to the cart
     const handleAddToCart = async () => {
         if (!userId) {
             alert("Please log in to add items to your cart.");
             return;
         }
-    
+
         try {
             const response = await axios.post(
-                'http://localhost:5004/api/items/add',
+                `${apiUrl}/items/add`,
                 {
                     product_id: id,
                     price: product.price,
@@ -77,40 +74,21 @@ const ProductDetails = ({ setCartItemCount }) => {
                 },
                 { withCredentials: true }
             );
-    
+
             if (response.status === 201 || response.status === 200) {
                 setMessage('Item added to cart!');
                 
-                // Ricalcola il numero degli articoli nel carrello
-                const cartResponse = await axios.get(`http://localhost:5004/api/items/items/user/${userId}`, {
-                    withCredentials: true,
-                });
-    
-                // Verifica la risposta e il totale degli articoli
-                console.log('Cart response:', cartResponse.data);
-    
+                const cartResponse = await axios.get(`${apiUrl}/items/items/user/${userId}`, { withCredentials: true });
                 const totalItemCount = cartResponse.data.reduce((acc, item) => acc + item.quantity, 0);
-                console.log('Total items count:', totalItemCount);  // Verifica il totale
-    
-                setCartItemCount(totalItemCount); // Aggiorna il contatore nel componente principale
+                setCartItemCount(totalItemCount);
                 setQuantity(1);
-                setTimeout(() => {
-                    setMessage('');
-                }, 3000);
+                setTimeout(() => setMessage(''), 3000);
             }
         } catch (error) {
             console.error('Error adding to cart:', error);
             setMessage('Failed to add item to cart.');
         }
     };
-    
-    
-    
-    
-    
-    
-    
-    
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;
@@ -188,4 +166,5 @@ ProductDetails.propTypes = {
 };
 
 export default ProductDetails;
+
 

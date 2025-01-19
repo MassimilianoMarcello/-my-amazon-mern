@@ -10,11 +10,12 @@ const CategoryProducts = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5004/api';
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get(`http://localhost:5004/api/products/category/${category}`);
+                const response = await axios.get(`${apiUrl}/products/category/${category}`);
                 setProducts(response.data);
             } catch (error) {
                 setError(error.message);
@@ -24,7 +25,7 @@ const CategoryProducts = () => {
         };
 
         fetchProducts();
-    }, [category]);
+    }, [category, apiUrl]);
 
     if (loading) {
         return <p>Loading...</p>;

@@ -9,11 +9,13 @@ const DiscountedProducts = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const carouselRef = useRef(null);
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5004/api';
+    
 
     useEffect(() => {
         const fetchDiscountedProducts = async () => {
             try {
-                const response = await axios.get('http://localhost:5004/api/products/products/discounted');
+                const response = await axios.get(`${apiUrl}/products/products/discounted`);
                 const products = response.data;
 
                 // Ordina i prodotti per sconto decrescente
@@ -33,7 +35,7 @@ const DiscountedProducts = () => {
         };
 
         fetchDiscountedProducts();
-    }, []);
+    }, [apiUrl]);
 
     const scrollLeft = () => {
         carouselRef.current.scrollBy({ left: -250, behavior: 'smooth' });

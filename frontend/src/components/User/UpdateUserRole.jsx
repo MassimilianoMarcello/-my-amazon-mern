@@ -5,10 +5,12 @@ import axios from 'axios';
 const UpdateUserRole = ({ userId, currentRole, onRoleChange }) => {
     const [role, setRole] = useState(currentRole);
     const [message, setMessage] = useState('');
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5004/api';
+    
 
     const handleRoleChange = async () => {
         try {
-            const response = await axios.put(`http://localhost:5004/api/users/${userId}/role`, { role } , { withCredentials: true });
+            const response = await axios.put(` ${apiUrl}/users/${userId}/role`, { role } , { withCredentials: true });
             setMessage(`Role updated to ${response.data.role}`);
             onRoleChange(userId, response.data.role); // Aggiorna il ruolo nella lista
         } catch (error) {

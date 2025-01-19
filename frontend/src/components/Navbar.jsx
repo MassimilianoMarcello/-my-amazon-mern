@@ -17,7 +17,9 @@ const Navbar = ({ cartItemCount }) => {
     useEffect(() => {
         const checkAdmin = async () => {
             try {
-                const res = await axios.get(`http://localhost:5004/api/users/${userId}`, {
+                // Usa VITE_API_URL per costruire l'URL dell'API
+                const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5004/api';
+                const res = await axios.get(`${apiUrl}/users/${userId}`, {
                     withCredentials: true,
                 });
                 if (res.status === 200 && res.data.role === 'admin') {
@@ -86,11 +88,13 @@ const Navbar = ({ cartItemCount }) => {
         </div>
     );
 };
+
 Navbar.propTypes = {
     cartItemCount: PropTypes.number.isRequired,
 };
 
 export default Navbar;
+
 
 
 

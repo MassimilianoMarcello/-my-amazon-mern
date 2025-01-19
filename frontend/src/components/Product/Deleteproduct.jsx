@@ -5,11 +5,12 @@ import axios from 'axios';
 const DeleteProduct = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5004/api';
 
     useEffect(() => {
         const deleteProduct = async () => {
             try {
-                const response = await axios.delete(`http://localhost:5004/api/products/${id}`);
+                const response = await axios.delete(`${apiUrl}/products/${id}`);
                 if (response.status === 200) {
                     console.log('Product deleted');
                     navigate('/products'); // Reindirizza alla pagina principale
@@ -22,7 +23,7 @@ const DeleteProduct = () => {
         };
 
         deleteProduct();
-    }, [id, navigate]);
+    }, [id, navigate, apiUrl]);
 
     return (
         <div>

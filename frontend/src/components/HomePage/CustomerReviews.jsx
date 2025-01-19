@@ -6,11 +6,13 @@ const CustomerReviews = () => {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5004/api';
+    
 
     useEffect(() => {
         const fetchReviews = async () => {
             try {
-                const response = await axios.get('http://localhost:5004/api/reviews');
+                const response = await axios.get(`${apiUrl}/reviews`);
                 setReviews(response.data);
             } catch (error) {
                 setError(error.message);
@@ -20,7 +22,7 @@ const CustomerReviews = () => {
         };
 
         fetchReviews();
-    }, []);
+    }, [apiUrl]);
 
     if (loading) {
         return <p>Loading...</p>;

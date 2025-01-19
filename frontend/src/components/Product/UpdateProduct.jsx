@@ -19,12 +19,14 @@ const UpdateProduct = () => {
     const [isRecommended, setIsRecommended] = useState(false);
     const [isDailyDeal, setIsDailyDeal] = useState(false);
     const [newArrivals, setNewArrivals] = useState(false);
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5004/api';
 
 
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await axios.get(`http://localhost:5004/api/products/${id}`);
+               
+                const response = await axios.get(`${apiUrl}/api/products/${id}`);
                 const product = response.data;
                 setTitle(product.title);
                 setDescription(product.description);
@@ -44,12 +46,13 @@ const UpdateProduct = () => {
         };
 
         fetchProduct();
-    }, [id]);
+    }, [id, apiUrl]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:5004/api/products/${id}`, {
+         
+            await axios.put(`${apiUrl}/products/${id}`, {
                 title,
                 description,
                 price,

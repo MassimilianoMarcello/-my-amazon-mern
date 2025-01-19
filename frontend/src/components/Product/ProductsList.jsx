@@ -1,18 +1,22 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ProductCard from './ProductCard';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './ProductList.css';
+
 const ProductsList = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const location = useLocation();
     const navigate = useNavigate();
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5004/api';
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await fetch('http://localhost:5004/api/products');
+                // Usa VITE_API_URL da variabili d'ambiente
+              
+                const response = await fetch(`${apiUrl}/products`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch products');
                 }
@@ -26,7 +30,7 @@ const ProductsList = () => {
         };
 
         fetchProducts();
-    }, []);
+    }, [apiUrl]);
 
     const query = new URLSearchParams(location.search);
     const category = query.get('category') || 'All';

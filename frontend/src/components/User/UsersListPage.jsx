@@ -7,11 +7,13 @@ const GetAllUsers = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5004/api';
+    
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:5004/api/users' , {  // Fetch all users
+                const response = await axios.get(` ${apiUrl}/users` , {  // Fetch all users
                     withCredentials: true,
                 });
                 setUsers(response.data);
@@ -23,7 +25,7 @@ const GetAllUsers = () => {
         };
 
         fetchUsers();
-    }, []);
+    }, [apiUrl]);
 
     const updateUserRole = (userId, newRole) => {
         setUsers(users.map(user => 

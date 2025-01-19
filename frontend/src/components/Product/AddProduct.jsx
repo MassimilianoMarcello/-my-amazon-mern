@@ -15,6 +15,7 @@ const CreateProduct = () => {
     const [isRecommended, setIsRecommended] = useState(false);
     const [isDailyDeal, setIsDailyDeal] = useState(false);
     const [isNerArrivals, setIsNewArrivals] = useState(false);
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5004/api';
   
 
     const navigate = useNavigate();
@@ -24,7 +25,7 @@ const CreateProduct = () => {
         const product = { title, description, price, category, mainImage, images ,discount,isFeatured,isRecommended,isDailyDeal,isNerArrivals};
 
         try {
-            const response = await axios.post('http://localhost:5004/api/products', product, {
+            const response = await axios.post(`${apiUrl}/products`, product, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
