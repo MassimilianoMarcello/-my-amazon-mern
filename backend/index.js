@@ -36,7 +36,7 @@ const __dirname = path.dirname(__filename);
 // cors
 const allowedOrigins = process.env.CORS_ORIGINS
     ? process.env.CORS_ORIGINS.split(',')
-    : ['http://localhost:5173','https://my-amz-mern-backend.onrender.com'];
+    : ['http://localhost:5173','https://my-amz-mern-backend.onrender.com,https://my-amzn-mern-cc0285a79f4e.herokuapp.com'];
 
     console.log('Allowed Origins:', allowedOrigins);
 
