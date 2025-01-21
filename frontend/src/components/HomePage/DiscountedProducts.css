@@ -24,8 +24,8 @@
     flex: 1;
 }
 .best-deals-grid > .product-card {
-    width: 500px;
-    height: 300px;
+    width: 400px;
+    height: 200px;
     margin: 0 auto;
     border: solid 1px #ccc;
     display: flex;
@@ -79,6 +79,7 @@
 
 .carousel-container {
     position: relative;
+    padding: 0 5rem;
 }
 
 .other-deals-carousel {
@@ -95,12 +96,13 @@
 
 .carousel-item {
     flex: 0 0 auto;
-    width: 250px;
+    width: 350px;
 }
 
 .carousel-button {
     position: absolute;
     top: 50%;
+    width: 50px;
     transform: translateY(-50%);
     background-color: rgba(0, 0, 0, 0.5);
     color: white;

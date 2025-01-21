@@ -1,79 +1,100 @@
 .product-card {
-width: 500px;
-
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 16px;
+    width: 400px;
     position: relative;
     border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 26px;
+    border-radius: 12px;
+    padding: 16px;
     margin: 16px;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     background-color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .product-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
 .discount-badge {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: #ff0000;
+    top: 12px;
+    left: 12px;
+    background-color: #ff4d4d;
     color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
+    padding: 6px 12px;
+    border-radius: 6px;
     font-size: 0.9rem;
     font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .product-image {
     width: 100%;
     height: auto;
-    align-items: center;
     border-radius: 8px;
     object-fit: cover;
-    margin-bottom: 12px;
+    align-self: center;
 }
 
 .product-info {
-    text-align: center;
+    display: grid;
+    grid-template-rows: auto auto auto;
+    gap: 8px;
+    align-items: start;
+    justify-content: start;
 }
 
 .product-title {
-    font-size: 1.2rem;
+    font-size: 1.2rem !important;
     font-weight: 600;
     color: #333;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    background-color: #ff4d4d;
 }
 
-.product-price {
-    font-size: 1rem;
-    color: #007bff;
-    margin-bottom: 12px;
+.product-prices {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 4px;
 }
 
 .original-price {
     text-decoration: line-through;
     color: #999;
+    font-size: 0.9rem;
 }
 
 .discounted-price {
-    color: #ff0000;
+    color: #ff4d4d;
+    font-weight: bold;
+    font-size: 1.1rem;
 }
 
 .details-link {
+    margin-top: auto; /* Posiziona il pulsante sempre in basso */
     display: inline-block;
-    color: #007bff;
+    font-size: 0.9rem;
+    color: white;
+    background-color: #007bff;
     text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    text-align: center;
 }
 
 .details-link:hover {
-    text-decoration: underline;
+    background-color: #0056b3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
+
+
+
 

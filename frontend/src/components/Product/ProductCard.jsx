@@ -7,27 +7,28 @@ const ProductCard = ({ product }) => {
 
     return (
         <div className="product-card">
-            {product.discount > 0 && (
-                <div className="discount-badge">
-                    {product.discount}% OFF
-                </div>
-            )}
-            <img src={product.mainImage} alt={product.title} className="product-image" />
-            <div className="product-info">
-                <h2 className="product-title">{product.title}</h2>
+        {product.discount > 0 && (
+            <div className="discount-badge">{product.discount}% OFF</div>
+        )}
+        <img src={product.mainImage} alt={product.title} className="product-image" />
+        <div className="product-info">
+            <h2 className="product-title">{product.title}</h2>
+            <div className="product-prices">
                 {product.discount > 0 ? (
-                    <div>
-                        <p className="product-price original-price">${product.price.toFixed(2)}</p>
-                        <p className="product-price discounted-price">${discountedPrice.toFixed(2)}</p>
-                    </div>
+                    <>
+                        <p className="original-price">${product.price.toFixed(2)}</p>
+                        <p className="discounted-price">${discountedPrice.toFixed(2)}</p>
+                    </>
                 ) : (
-                    <p className="product-price">${product.price.toFixed(2)}</p>
+                    <p className="discounted-price">${product.price.toFixed(2)}</p>
                 )}
-                <Link to={`/products/${product._id}`} className="details-link">
-                    View Details
-                </Link>
             </div>
+            <Link to={`/products/${product._id}`} className="details-link">
+                View Details
+            </Link>
         </div>
+    </div>
+    
     );
 };
 
