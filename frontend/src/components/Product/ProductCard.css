@@ -1,3 +1,4 @@
+/* Stili comuni per tutte le carte prodotto */
 .product-card {
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -13,11 +14,13 @@
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
+/* Effetto hover per la carta prodotto */
 .product-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
+/* Badge per sconto */
 .discount-badge {
     position: absolute;
     top: 12px;
@@ -31,6 +34,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Immagine del prodotto */
 .product-image {
     width: 100%;
     height: auto;
@@ -39,6 +43,7 @@
     align-self: center;
 }
 
+/* Informazioni prodotto */
 .product-info {
     display: grid;
     grid-template-rows: auto auto auto;
@@ -47,17 +52,23 @@
     justify-content: start;
 }
 
+/* Titolo prodotto */
 .product-title {
     font-size: 1.2rem !important;
     font-weight: 600;
     color: #333;
     margin-bottom: 4px;
+    margin-top: -2rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    background-color: #ff4d4d;
+    background-color: #9bc5da;
+    border: solid 2px #4d56ff;
+    border-radius: 5px;
+    padding: .5rem;
 }
 
+/* Prezzi del prodotto */
 .product-prices {
     display: flex;
     flex-direction: column;
@@ -77,6 +88,7 @@
     font-size: 1.1rem;
 }
 
+/* Link per visualizzare i dettagli */
 .details-link {
     margin-top: auto; /* Posiziona il pulsante sempre in basso */
     display: inline-block;
@@ -95,6 +107,24 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+/* Varianti della card */
+
+/* Variante 'default' */
+.product-card.default {
+    background-color: white;
+}
+
+/* Variante 'special' */
+.product-card.special {
+    background-color: #f0f0f0;
+    border: 1px solid #888;
+}
+
+/* Variante 'promo' */
+.product-card.promo {
+    background-color: #ffecb3;
+    border: 1px solid #ffb300;
+}
 
 
 

@@ -38,7 +38,7 @@ const DailyDeals = () => {
             <h2>Daily Deals</h2>
             <div className="products-grid">
                 {products.map(product => (
-                    <ProductCard key={product._id} product={product} />
+                    <ProductCard key={product._id} product={product} variant="daily-deals" />
                 ))}
             </div>
         </div>

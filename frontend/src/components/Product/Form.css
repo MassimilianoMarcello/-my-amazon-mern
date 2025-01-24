@@ -45,11 +45,14 @@ form button:hover {
 
 .image-input {
     display: flex;
+
     align-items: center;
     margin-bottom: 10px;
 }
 
 .image-input input {
+
+
     flex: 1;
     margin-right: 10px;
 }
@@ -61,6 +64,7 @@ form button:hover {
     padding: 8px 12px;
     border-radius: 4px;
     cursor: pointer;
+    width: 6rem;
 }
 
 .image-input button:hover {

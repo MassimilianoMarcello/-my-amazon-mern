@@ -10,7 +10,7 @@ import PromotionalBanner from './components/HomePage/PromotionalBanner';
 // import RecommendedProducts from './components/HomePage/RecommendedProducts';
 // import PopularCategories from './components/HomePage/PopularCategories';
 // import VideoPromotions from './components/HomePage/VideoPromotions';
-// import DailyDeals from './components/HomePage/DailyDeals';
+import DailyDeals from './components/HomePage/DailyDeals';
 import './Home.css';
 
 const Home = () => {
@@ -28,7 +28,7 @@ const Home = () => {
             {/* <RecommendedProducts /> */}
             {/* <PopularCategories /> */}
             {/* <VideoPromotions /> */}
-            {/* <DailyDeals /> */}
+            <DailyDeals />
         </div>
     );
 };

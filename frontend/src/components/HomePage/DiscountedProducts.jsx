@@ -64,7 +64,7 @@ const DiscountedProducts = () => {
          <div className="best-deals-grid">
                 
                 {bestDeals.map(product => (
-                    <ProductCard key={product._id} product={product} />
+                    <ProductCard key={product._id} product={product} variant="discounted" />
                 ))}
             </div>
             </div>
@@ -75,7 +75,7 @@ const DiscountedProducts = () => {
                 <div className="other-deals-carousel" ref={carouselRef}>
                     {otherDeals.map(product => (
                         <div key={product._id} className="carousel-item">
-                            <ProductCard product={product} />
+                            <ProductCard product={product}   variant="daily-deals" />
                         </div>
                     ))}
                 </div>
