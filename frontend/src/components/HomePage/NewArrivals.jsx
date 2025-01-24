@@ -37,7 +37,7 @@ const NewArrivals = () => {
             <h2>New Arrivals</h2>
             <div className="products-grid">
                 {products.map(product => (
-                    <ProductCard key={product._id} product={product} />
+                    <ProductCard key={product._id} product={product} variant='new-arrivals-cards' />
                 ))}
             </div>
         </div>

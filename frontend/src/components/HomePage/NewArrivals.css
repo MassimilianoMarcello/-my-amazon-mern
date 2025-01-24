@@ -1,0 +1,13 @@
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.product-card.new-arrivals-cards {
+   width: 20rem;
+   height: 15rem;
+   margin: 0 1rem;
+
+}

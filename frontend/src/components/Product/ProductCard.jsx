@@ -6,8 +6,8 @@ const ProductCard = ({ product, variant = 'default' }) => {
     const discountedPrice = product.price - (product.price * (product.discount / 100));
 
     return (
-        // classname dinamica per la card - in questo caso 'default'
-        <div className={`product-card ${variant}`}>
+        <div>
+             <div className={`product-card ${variant}`}>
             {product.discount > 0 && (
                 <div className={`discount-badge ${variant}`}>{product.discount}% OFF</div>
             )}
@@ -29,6 +29,9 @@ const ProductCard = ({ product, variant = 'default' }) => {
                 </Link>
             </div>
         </div>
+        </div>
+        // classname dinamica per la card - in questo caso 'default'
+       
     );
 };
 

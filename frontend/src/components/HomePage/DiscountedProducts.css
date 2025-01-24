@@ -1,6 +1,8 @@
 .discounted-products{
-    padding: 20px;
-    width: 100%;
+    margin: -4rem;
+    width: 90%;
+    background-color: red;
+    border: solid 5pc blueviolet;
 }
 
 .best-deals-main-container {
@@ -79,11 +81,19 @@
 
 .product-card.discounted{
     background-color: red;
+    width: 100%;
+    padding: 1rem;
+    margin-left: 4rem;
+}
+.product-info.discounted{
+
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.discount-badge.discounted{
-    background-color: rgb(255, 234, 0);
-}
+
 
 .carousel-container {
     position: relative;
