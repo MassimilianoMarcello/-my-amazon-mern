@@ -13,7 +13,7 @@ const RecommendedProducts = () => {
     useEffect(() => {
         const fetchRecommendedProducts = async () => {
             try {
-                const response = await axios.get(`${apiUrl}/products/recommended`);
+                const response = await axios.get(`${apiUrl}/products/this-products/recommended`);
                 setProducts(response.data);
             } catch (error) {
                 setError(error.message);

@@ -90,12 +90,21 @@ const productControllers = {
 
     getDailyDeals: async (req, res) => {
         try {
+            console.log('Querying daily deals...');
             const dailyDeals = await Product.find({ isDailyDeal: true });
+            if (!dailyDeals || dailyDeals.length === 0) {
+                console.log('No daily deals found');
+            } else {
+                console.log('Daily deals found:', dailyDeals);
+            }
             res.json(dailyDeals);
         } catch (error) {
+            console.log('Error fetching daily deals:', error.message); // Aggiungi un log per l'errore
             res.status(500).json({ message: error.message });
         }
     },
+    
+    
 // create a new product     
     createProduct: async (req, res) => {
         const { title, description, price, category, images,mainImage , discount, isFeatured,isRecommended,isDailyDeal,newArrivals} = req.body;

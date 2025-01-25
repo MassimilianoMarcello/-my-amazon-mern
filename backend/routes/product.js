@@ -31,10 +31,10 @@ router.get('/products/products/isfeatured', getFeaturedProducts);
 router.get('/products/this-products/new-arrivals', getNewArrivals);
 
 // recommended products
-router.get('/products/recommended', getRecommendedProducts);
+router.get('/products/this-products/recommended', getRecommendedProducts);
 
 // daily deals
-router.get('/products/daily-deals', getDailyDeals);
+router.get('/products/this-products/daily-deals', getDailyDeals);
 
 // category
 router.get('/products/category/:category', getProductsByCategory);

@@ -23,6 +23,7 @@ import DiscountedProducts from './components/HomePage/DiscountedProducts';
 import Home from './Home';
 import Cart from './components/Item-cart/Cart';
 import SuccessPage from './components/Item-cart/SuccessPage';
+import Footer from './components/Footer';
 
 const stripePromise = loadStripe('pk_test_51QMV0AJtWSbtcfAuJvEWpAwPyyLfRs6sNc4dgqfmQYcaIcOIqCEvRfl7ZpvCWWNKBH36DZzD5ilnoJm3TJZnWXYf00usrJmGs6');
 
@@ -87,6 +88,7 @@ const App = () => {
                         }
                     />
                 </Routes>
+                <Footer />
             </div>
         </Router>
     );

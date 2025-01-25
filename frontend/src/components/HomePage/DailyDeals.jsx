@@ -9,11 +9,11 @@ const DailyDeals = () => {
     const [error, setError] = useState(null);
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5004/api';
     
-
     useEffect(() => {
         const fetchDailyDeals = async () => {
             try {
-                const response = await axios.get(`${apiUrl}/products/daily-deals`);
+                const response = await axios.get(`${apiUrl}/products/this-products/daily-deals`);
+                console.log('Response from API:', response);  // Verifica la risposta completa
                 setProducts(response.data);
             } catch (error) {
                 setError(error.message);
@@ -21,9 +21,10 @@ const DailyDeals = () => {
                 setLoading(false);
             }
         };
-
+    
         fetchDailyDeals();
     }, [apiUrl]);
+    
 
     if (loading) {
         return <p>Loading...</p>;
